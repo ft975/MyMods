@@ -11,14 +11,14 @@ class TileLamp extends TileEntity {
 
 	override def readFromNBT(NBTag: NBTTagCompound) {
 		super.readFromNBT(NBTag)
-		color = Colors.fromID(NBTag.getByte("color"))
-		shape = Shapes.fromID(NBTag.getByte("shape"))
+		color = Colors.fromID(NBTag.getByte("C"))
+		shape = Shapes.fromID(NBTag.getByte("S"))
 	}
 
 	override def writeToNBT(NBTag: NBTTagCompound) {
 		super.writeToNBT(NBTag)
-		NBTag.setByte("shape", shape.meta)
-		NBTag.setByte("color", color.meta)
+		NBTag.setByte("S", shape.meta)
+		NBTag.setByte("C", color.meta)
 	}
 
 	override def getDescriptionPacket: Packet = {

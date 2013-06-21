@@ -5,7 +5,7 @@ import ft975.lighting.render.RenderUtil.Color
 
 sealed class Colors(metadata: Byte, col: (Short, Short, Short), colorName: String) {
 	val meta = metadata
-	val color = Colors.getColor(col)
+	val color = Colors.getColor(col, .3f)
 	println(color)
 	val name = colorName
 }
@@ -19,6 +19,14 @@ object Colors {
 		Color(c._1.toFloat / 255f, c._2.toFloat / 255f, c._3.toFloat / 255f)
 	}
 
+	protected def getColor(col: (Short, Short, Short), p: Float): Color = {
+		val c = getColor(col)
+		val r = c.R * p
+		val g = c.G * p
+		val b = c.B * p
+		Color(c.R - r, c.G - g, c.B - b)
+	}
+
 
 	case object Black extends Colors(0, (0x19, 0x19, 0x19), "Black")
 
@@ -28,7 +36,7 @@ object Colors {
 
 	case object Brown extends Colors(3, (0x7F, 0x66, 0x4C), "Brown ")
 
-	case object Blue extends Colors(4, (0x33, 0x66, 0xCC), "Blue")
+	case object Blue extends Colors(4, (0x19, 0x19, 0xFF) /*.1,.1,1*/ , "Blue")
 
 	case object Purple extends Colors(5, (0xB2, 0x66, 0xE5), "Purple")
 
