@@ -39,9 +39,7 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) {
 		}
 		println(te)
 		DebugOnly {
-			log.log(Level.INFO,
-				(ItemLamp.buildStack(1, te.color, te.shape, te.isOn).getTagCompound.getByte("c").toString +
-					ItemLamp.buildStack(1, te.color, te.shape, te.isOn).getTagCompound.getByte("s").toString))
+			log.log(Level.INFO, ItemLamp.getData(ItemLamp.buildStack(1, te.color, te.shape, te.isOn)).toString())
 		}
 		ItemLamp.buildStack(1, te.color, te.shape, te.isOn)
 	}

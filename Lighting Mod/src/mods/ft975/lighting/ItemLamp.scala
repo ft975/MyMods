@@ -21,8 +21,10 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 				case te: TileLamp => te
 				case _ => throw new ClassCastException
 			}
-			tile.color = Colors.fromID(stack.getTagCompound.getByte("C"))
-			tile.shape = Shapes.fromID(stack.getTagCompound.getByte("S"))
+			val data = ItemLamp.getData(stack)
+			tile.color = data._1
+			tile.shape = data._2
+			tile.isOn = data._3
 			true
 		} else {
 			false
@@ -30,13 +32,12 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 	}
 
 	override def getUnlocalizedName(iS: ItemStack): String = {
-		if (iS.getTagCompound == null) "Broken, throw in lava"
-		else {
-			val shape = Shapes.fromID(iS.getTagCompound.getByte("S")).unLocName
-			val col = Colors.fromID(iS.getTagCompound.getByte("C")).name
-			val on = iS.getTagCompound.getBoolean("O")
-			"item." + true + col + shape + "lamp"
-		}
+		val data = ItemLamp.getData(iS)
+
+		val shape = data._2.unLocName
+		val col = data._1.name
+		val on = data._3
+		"item." + true + col + shape + "lamp" + on
 	}
 
 	override def getSubItems(n1: Int, n2: CreativeTabs, iList: java.util.List[_]) {
@@ -45,9 +46,9 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 
 	lazy val subtypes = {
 		val list = new java.util.ArrayList[ItemStack]
-		for (sha: Shapes <- Shapes.vals;
-		     col: Colors <- Colors.vals;
-		     on: Boolean <- List(true, false)) {
+		for (on: Boolean <- List(true, false);
+		     sha: Shapes <- Shapes.vals;
+		     col: Colors <- Colors.vals) {
 			list.add(ItemLamp.buildStack(1, col, sha, on))
 			DebugOnly {log.log(Level.INFO, "Sub Item Added: " + col + sha)}
 		}
@@ -85,7 +86,10 @@ object ItemLamp {
 
 	def buildStack(te: TileLamp): ItemStack = {
 		DebugOnly {logInfo(te)}
-		buildStack(1, te.color, te.shape, te.isOn)
+		if (te.color != null && te.shape != null)
+			buildStack(1, te.color, te.shape, te.isOn)
+		else
+			new ItemStack(0, 0, 0)
 	}
 
 	private def isValidDamage(damage: Short): Boolean = {

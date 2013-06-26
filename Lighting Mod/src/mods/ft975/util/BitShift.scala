@@ -30,7 +30,7 @@ object BitShift {
 
 	def getShortFromNibbles(x: Array[Byte]): Short = {
 		var r: Short = 0
-		for (i <- 0 to 4) {
+		for (i <- 0 to 3) {
 			r = (r | (x(i) << (i * 4))).toShort
 		}
 		r
@@ -38,7 +38,7 @@ object BitShift {
 
 	def getIntFromNibbles(x: Array[Byte]): Int = {
 		var r: Int = 0
-		for (i <- 0 to 8) {
+		for (i <- 0 to 7) {
 			r = r | (x(i) << (i * 4))
 		}
 		r

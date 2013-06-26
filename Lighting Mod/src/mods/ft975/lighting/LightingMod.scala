@@ -57,11 +57,12 @@ object LightingMod {
 		GameRegistry.registerBlock(blockLamp, classOf[ItemLamp], "BlockLamp", ModInfo.modID)
 		blockLamp.setCreativeTab(CreativeTabs.tabBlock)
 		for (col: Colors <- Colors.vals;
-		     sha: Shapes <- Shapes.vals) {
-			val iS = ItemLamp.buildStack(1, col, sha, true)
-			LanguageRegistry.addName(iS, col.name + " " + sha.name)
+		     sha: Shapes <- Shapes.vals;
+		     on: Boolean <- List(true, false)) {
+			val iS = ItemLamp.buildStack(1, col, sha, on)
+			LanguageRegistry.addName(iS, (if (on) "Lit" else "Unlit") + " " + col.name + " " + sha.name)
 			DebugOnly {
-				log.log(Level.INFO, "registered " + col + sha)
+				log.log(Level.INFO, "registered " + col + sha + on)
 			}
 		}
 	}
