@@ -8,6 +8,8 @@ import Shapes.{Bulb, Panel, Block, Caged}
 import mods.ft975.lighting.Shapes
 
 object RenderUtil {
+	var renderPass = 0
+
 	def renderInOut(mod: ModelRenderer, size: Float) {
 		GL11.glPushMatrix()
 		GL11.glFrontFace(GL11.GL_CW)
@@ -25,14 +27,13 @@ object RenderUtil {
 		GL11.glColor3f(col.R, col.G, col.B)
 		bulb.render(size)
 		//Render the light rays
-		if (isOn) {
+		if (isOn && renderPass == 1) {
 			GL11.glDepthMask(false)
 			GL11.glEnable(GL11.GL_BLEND)
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE)
-			GL11.glColor4f(col.R, col.G, col.B, .1001F)
+			GL11.glColor4f(col.R, col.G, col.B, .5F)
 			rays.render(size)
 			GL11.glDepthMask(true)
-			rays.render(size)
 			GL11.glDisable(GL11.GL_BLEND)
 			GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE)
 		}

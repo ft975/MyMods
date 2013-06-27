@@ -4,6 +4,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.packet.{Packet, Packet132TileEntityData}
 import net.minecraft.network.INetworkManager
+import mods.ft975.lighting.render.RenderUtil
 
 class TileLamp extends TileEntity {
 	var color: Colors = null
@@ -38,6 +39,8 @@ class TileLamp extends TileEntity {
 	override def canUpdate: Boolean = true
 
 	override def toString: String = "TileLamp @" + xCoord + ", " + yCoord + ", " + zCoord + ", With values: " + color + ", " + shape + ", isOn: " + isOn
+
+	override def shouldRenderInPass(pass: Int): Boolean = { RenderUtil.renderPass = pass; pass == 0 || pass == 1 }
 }
 
 
