@@ -40,7 +40,7 @@ class TileLamp extends TileEntity {
 
 	override def toString: String = "TileLamp @" + xCoord + ", " + yCoord + ", " + zCoord + ", With values: " + color + ", " + shape + ", isOn: " + isOn
 
-	override def shouldRenderInPass(pass: Int): Boolean = { RenderUtil.renderPass = pass; pass == 0 || pass == 1 }
+	override def shouldRenderInPass(pass: Int): Boolean = { RenderUtil.renderPass = pass; true }
 }
 
 

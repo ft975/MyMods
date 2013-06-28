@@ -20,6 +20,14 @@ trait ModelLamp extends ModelBase {
 
 	def getRenderValues(typ: ItemRenderType): (Float, Float, Float, Float)
 
+	def render(col: Color, isOn: Boolean, x: Int, y: Int, z: Int) {
+		FMLClientHandler.instance.getClient.renderEngine.bindTexture(ModInfo.resourceFolder + texture)
+		if (Base != null) Base.render(0.0625F)
+		if (Cover != null) RenderUtil.renderInOut(Cover, 0.0625F)
+		RenderUtil.renderBulbRays(Bulb, Rays, 0.0625F, isOn, col, x, y, z)
+		FMLClientHandler.instance.getClient.renderEngine.resetBoundTexture()
+	}
+
 	def render(col: Color, isOn: Boolean) {
 		FMLClientHandler.instance.getClient.renderEngine.bindTexture(ModInfo.resourceFolder + texture)
 		if (Base != null) Base.render(0.0625F)
