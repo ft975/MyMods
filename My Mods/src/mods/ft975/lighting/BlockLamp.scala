@@ -45,8 +45,6 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 
 	override def harvestBlock(par1World: World, par2EntityPlayer: EntityPlayer, par3: Int, par4: Int, par5: Int, par6: Int) {}
 
-	override def onBlockHarvested(par1World: World, par2: Int, par3: Int, par4: Int, par5: Int, par6EntityPlayer: EntityPlayer) { super.onBlockHarvested(par1World, par2, par3, par4, par5, par6EntityPlayer) }
-
 	override def breakBlock(w: World, x: Int, y: Int, z: Int, meta: Int, par6: Int) {
 		BlockHelper.dropItemStack(List(
 			ItemLamp.buildStack(w.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]))
@@ -57,7 +55,9 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 
 	override def getLightOpacity(world: World, x: Int, y: Int, z: Int): Int = 0
 
+	@SideOnly(Side.CLIENT)
 	override def getRenderBlockPass: Int = 1
 
+	@SideOnly(Side.CLIENT)
 	override def canRenderInPass(pass: Int): Boolean = true
 }

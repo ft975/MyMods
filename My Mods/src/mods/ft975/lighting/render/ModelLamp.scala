@@ -6,7 +6,9 @@ import cpw.mods.fml.client.FMLClientHandler
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import mods.ft975.lighting.ModInfo
 import mods.ft975.lighting.render.RenderUtil.Color
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 
+@SideOnly(Side.CLIENT)
 trait ModelLamp extends ModelBase {
 	protected val Base: ModelRenderer
 	protected val Bulb: ModelRenderer
@@ -19,14 +21,6 @@ trait ModelLamp extends ModelBase {
 	protected val DefaultColor = new Color(1F, 0F, 1F)
 
 	def getRenderValues(typ: ItemRenderType): (Float, Float, Float, Float)
-
-	def render(col: Color, isOn: Boolean, x: Int, y: Int, z: Int) {
-		FMLClientHandler.instance.getClient.renderEngine.bindTexture(ModInfo.resourceFolder + texture)
-		if (Base != null) Base.render(0.0625F)
-		if (Cover != null) RenderUtil.renderInOut(Cover, 0.0625F)
-		RenderUtil.renderBulbRays(Bulb, Rays, 0.0625F, isOn, col, x, y, z)
-		FMLClientHandler.instance.getClient.renderEngine.resetBoundTexture()
-	}
 
 	def render(col: Color, isOn: Boolean) {
 		FMLClientHandler.instance.getClient.renderEngine.bindTexture(ModInfo.resourceFolder + texture)

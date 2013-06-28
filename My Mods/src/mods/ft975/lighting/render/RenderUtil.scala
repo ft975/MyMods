@@ -8,7 +8,9 @@ import Shapes.{Bulb, Panel, Block, Caged}
 import mods.ft975.lighting.Shapes
 import scala.util.Random
 import net.minecraftforge.client.MinecraftForgeClient
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 
+@SideOnly(Side.CLIENT)
 object RenderUtil {
 	val rand = new Random()
 	var renderPass = 0
@@ -22,38 +24,40 @@ object RenderUtil {
 		GL11.glPopMatrix()
 	}
 
-	// Thanks to RedmenNL on IRC for the idea
+	// Thanks to kimixa from reddit for patiently explaining the reasons behind my bugs and how to fix them
 	def renderBulbRays(bulb: ModelRenderer, rays: ModelRenderer, size: Float, isOn: Boolean, col: Color) {
-		renderBulbRays(bulb, rays, size, isOn, col, 0, 0, 0)
-	}
-
-	def renderBulbRays(bulb: ModelRenderer, rays: ModelRenderer, size: Float, isOn: Boolean, col: Color, x: Int, y: Int, z: Int) {
 		//Start Context
 		GL11.glPushMatrix()
-		val x1: Double = x % 3 / 3
-		val y1: Double = y % 3 / 3
-		val z1: Double = z % 3 / 3
-		GL11.glTranslated(y1 + z1, x1 + z1, y1 + y1)
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D)
 		//Render the bulb
-		GL11.glColor3f(col.R, col.G, col.B)
-		bulb.render(size)
+		if (MinecraftForgeClient.getRenderPass == 0) {
+			GL11.glColor3f(col.R, col.G, col.B)
+			bulb.render(size)
+		}
+
 		//Render the light rays
 		if (isOn && MinecraftForgeClient.getRenderPass == 1) {
-			GL11.glScalef(1.005F, 1.005F, 1.005F)
+			// Setup light rays
+			GL11.glDepthMask(false)
 			GL11.glEnable(GL11.GL_BLEND)
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE)
-			GL11.glColor4f(col.R, col.G, col.B, .4f)
+
+			// Setup texture and color
+			GL11.glDisable(GL11.GL_TEXTURE_2D)
+			GL11.glColor4f(col.R, col.G, col.B, .5f)
+
 			rays.render(size)
+
+			// Reset Pt 1
+			GL11.glDepthMask(true)
 			GL11.glDisable(GL11.GL_BLEND)
 			GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE)
+			GL11.glEnable(GL11.GL_TEXTURE_2D)
 		}
+
 		//Reset Context
-		GL11.glEnable(GL11.GL_TEXTURE_2D)
 		GL11.glPopMatrix()
 	}
-
 
 	def rotateRender(model: ModelLamp, scale: Float, col: Color, isOn: Boolean, side: ForgeDirection) {
 		GL11.glPushMatrix()

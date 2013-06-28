@@ -2,7 +2,9 @@ package mods.ft975.lighting.render
 
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraft.client.model.ModelRenderer
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 
+@SideOnly(Side.CLIENT)
 object ModelBulbLamp extends ModelLamp {
 	protected val Base: ModelRenderer = new ModelRenderer(this, 1, 1)
 	protected val Bulb: ModelRenderer = new ModelRenderer(this, 1, 15)

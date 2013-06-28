@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 
 @Mod(modid = ModInfo.modID, name = ModInfo.modName, version = ModInfo.version, acceptedMinecraftVersions = ModInfo.versionMinecraft, modLanguage = "scala")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
-object LightingMod {
+object TubeMod {
 	var config: Configuration = null
 
 	@PreInit

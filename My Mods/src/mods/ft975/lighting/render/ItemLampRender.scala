@@ -6,7 +6,9 @@ import net.minecraftforge.client.IItemRenderer.{ItemRendererHelper, ItemRenderTy
 import org.lwjgl.opengl.GL11
 import mods.ft975.lighting.ItemLamp
 import mods.ft975.lighting.render.RenderUtil.Color
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 
+@SideOnly(Side.CLIENT)
 class ItemLampRender extends IItemRenderer {
 	def handleRenderType(item: ItemStack, `type`: ItemRenderType): Boolean = true
 
