@@ -4,6 +4,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import scala.util.Random
 import net.minecraft.entity.item.EntityItem
+import net.minecraftforge.common.ForgeDirection
+import net.minecraft.util.AxisAlignedBB
 
 object BlockHelper {
 	private val rand = new Random()
@@ -35,6 +37,19 @@ object BlockHelper {
 
 				world.spawnEntityInWorld(ent)
 			}
+		}
+	}
+
+	def getSidedAABB(x0: Float, y0: Float, z0: Float, x1: Float, y1: Float, z1: Float, side: ForgeDirection): AxisAlignedBB = {
+		val pool = AxisAlignedBB.getAABBPool
+		side match {
+			case ForgeDirection.DOWN => pool.getAABB(x0, y0, z0, x1, y1, z1)
+			case ForgeDirection.UP => pool.getAABB(x0, 1 - y1, z0, x1, 1 - y0, z1)
+			case ForgeDirection.NORTH => pool.getAABB(x0, 1 - z1, y1, x1, 1 - z0, y0)
+			case ForgeDirection.SOUTH => pool.getAABB(x0, 1 - z1, 1 - y1, x1, 1 - z0, 1 - y0)
+			case ForgeDirection.WEST => pool.getAABB(y1, 1 - x1, z0, y0, 1 - x0, z1)
+			case ForgeDirection.EAST => pool.getAABB(1 - y1, 1 - x1, z0, 1 - y0, 1 - x0, z1)
+			case ForgeDirection.UNKNOWN => pool.getAABB(0, 0, 0, 1, 1, 1)
 		}
 	}
 }

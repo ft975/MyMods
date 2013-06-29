@@ -60,12 +60,10 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 		val te = iba.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
 		if (te != null) {
 			te.shape match {
-				case Caged =>
-				case Shapes.Block =>
-					setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
-				case Panel =>
-					setBlockBounds(BlockHelper.getSidedAABB(0.0F, 0.0F, 0.0F, 1.0F, .0625F, 1.0F, te.side))
-				case Bulb =>
+				case Caged => setBlockBounds(BlockHelper.getSidedAABB(0.1875F, 0, 0.1875F, 0.8125F, 0.4375F, 0.8125F, te.side))
+				case Shapes.Block => setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
+				case Panel => setBlockBounds(BlockHelper.getSidedAABB(0.0F, 0.0F, 0.0F, 1.0F, .0625F, 1.0F, te.side))
+				case Bulb => setBlockBounds(BlockHelper.getSidedAABB(0.125F, 0, 0.125F, 0.875F, 0.40625F, 0.875F, te.side))
 			}
 		} else {
 			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
