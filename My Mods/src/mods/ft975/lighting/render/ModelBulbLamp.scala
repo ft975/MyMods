@@ -20,8 +20,8 @@ object ModelBulbLamp extends ModelLamp {
 	Base.mirror = true
 	setRotation(Base, 0F, 0F, 0F)
 
-	Bulb.addBox(0F, 0F, 0F, 9, 5, 9)
-	Bulb.setRotationPoint(-4.5F, 18F, -4.5F)
+	Bulb.addBox(0F, 0F, 0F, 8, 5, 8)
+	Bulb.setRotationPoint(-4F, 18F, -4F)
 	Bulb.setTextureSize(64, 32)
 	Bulb.mirror = true
 	setRotation(Bulb, 0F, 0F, 0F)

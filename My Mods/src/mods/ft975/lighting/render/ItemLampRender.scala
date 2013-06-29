@@ -26,7 +26,7 @@ class ItemLampRender extends IItemRenderer {
 		GL11.glTranslatef(x.toFloat, y.toFloat, z.toFloat)
 		GL11.glRotatef(180, 1, 0, 0.0F)
 		GL11.glScalef(scale, scale, scale)
-		model.render(color, on)
+		model.render(color, on, isItem = true)
 		GL11.glPopMatrix()
 	}
 }

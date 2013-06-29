@@ -30,8 +30,8 @@ object ModelBlockLamp extends ModelLamp {
 		typ match {
 			case ItemRenderType.ENTITY => (0, 1.2F, 0, 1F)
 			case ItemRenderType.EQUIPPED => (.5F, 1.75F, .5F, 1F)
-			case ItemRenderType.INVENTORY => (0, 1F, 0, 1f)
-			case ItemRenderType.EQUIPPED_FIRST_PERSON => (.5F, 2.25F, .5F, 1F)
+			case ItemRenderType.INVENTORY => (0, .925F, 0, .95f)
+			case ItemRenderType.EQUIPPED_FIRST_PERSON => (.5F, 1.5F, .5F, 1F)
 			case _ => (0, 0, 0, 1)
 		}
 	}

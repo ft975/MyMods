@@ -22,11 +22,11 @@ trait ModelLamp extends ModelBase {
 
 	def getRenderValues(typ: ItemRenderType): (Float, Float, Float, Float)
 
-	def render(col: Color, isOn: Boolean) {
+	def render(col: Color, isOn: Boolean, isItem: Boolean) {
 		FMLClientHandler.instance.getClient.renderEngine.bindTexture(ModInfo.resourceFolder + texture)
 		if (Base != null) Base.render(0.0625F)
 		if (Cover != null) RenderUtil.renderInOut(Cover, 0.0625F)
-		RenderUtil.renderBulbRays(Bulb, Rays, 0.0625F, isOn, col)
+		RenderUtil.renderBulbRays(Bulb, Rays, 0.0625F, isOn, col, isItem)
 		FMLClientHandler.instance.getClient.renderEngine.resetBoundTexture()
 	}
 

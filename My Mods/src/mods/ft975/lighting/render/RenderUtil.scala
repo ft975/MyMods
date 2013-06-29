@@ -25,18 +25,18 @@ object RenderUtil {
 	}
 
 	// Thanks to kimixa from reddit for patiently explaining the reasons behind my bugs and how to fix them
-	def renderBulbRays(bulb: ModelRenderer, rays: ModelRenderer, size: Float, isOn: Boolean, col: Color) {
+	def renderBulbRays(bulb: ModelRenderer, rays: ModelRenderer, size: Float, isOn: Boolean, col: Color, isItem: Boolean) {
 		//Start Context
 		GL11.glPushMatrix()
 
 		//Render the bulb
-		if (MinecraftForgeClient.getRenderPass == 0) {
+		if (MinecraftForgeClient.getRenderPass == 0 || isItem) {
 			GL11.glColor3f(col.R, col.G, col.B)
 			bulb.render(size)
 		}
 
 		//Render the light rays
-		if (isOn && MinecraftForgeClient.getRenderPass == 1) {
+		if (isOn && (MinecraftForgeClient.getRenderPass == 1 || isItem)) {
 			// Setup light rays
 			GL11.glDepthMask(false)
 			GL11.glEnable(GL11.GL_BLEND)
@@ -84,8 +84,9 @@ object RenderUtil {
 				GL11.glTranslatef(-1, -1, 0)
 			}
 			case ForgeDirection.UNKNOWN =>
+			case default =>
 		}
-		model.render(col, isOn, side)
+		model.render(col, isOn, isItem = false)
 		GL11.glPopMatrix()
 	}
 

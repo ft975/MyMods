@@ -7,12 +7,13 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.ForgeDirection
 import java.util.logging.Level
 import mods.ft975.util.BitShift
+import cpw.mods.fml.relauncher.{SideOnly, Side}
 
 class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 
 	setHasSubtypes(true)
 
-	override def shouldPassSneakingClickToBlock(par2World: World, par4: Int, par5: Int, par6: Int): Boolean = super.shouldPassSneakingClickToBlock(par2World, par4, par5, par6)
+	override def shouldPassSneakingClickToBlock(world: World, par4: Int, par5: Int, par6: Int): Boolean = super.shouldPassSneakingClickToBlock(world, par4, par5, par6)
 
 	override def placeBlockAt(stack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, side: Int, hitX: Float, hitY: Float, hitZ: Float, metadata: Int): Boolean = {
 		if (super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata)) {
@@ -24,7 +25,9 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 			val data = ItemLamp.getData(stack)
 			tile.color = data._1
 			tile.shape = data._2
-			tile.isOn = data._3
+			tile.inverted = data._3
+			tile.side = ForgeDirection.getOrientation(side).getOpposite
+			tile.setRedstoneState(world.isBlockIndirectlyGettingPowered(x, y, z))
 			true
 		} else {
 			false
@@ -36,20 +39,22 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 
 		val shape = data._2.unLocName
 		val col = data._1.name
-		val on = data._3
-		"item." + true + col + shape + "lamp" + on
+		val inverted = data._3
+		"item." + true + col + shape + "lamp" + inverted
 	}
 
+	@SideOnly(Side.CLIENT)
 	override def getSubItems(n1: Int, n2: CreativeTabs, iList: java.util.List[_]) {
 		iList.asInstanceOf[java.util.List[ItemStack]].addAll(subtypes)
 	}
 
+	@SideOnly(Side.CLIENT)
 	lazy val subtypes = {
 		val list = new java.util.ArrayList[ItemStack]
-		for (on: Boolean <- List(true, false);
+		for (inverted: Boolean <- List(true, false);
 		     sha: Shapes <- Shapes.vals;
 		     col: Colors <- Colors.vals) {
-			list.add(ItemLamp.buildStack(1, col, sha, on))
+			list.add(ItemLamp.buildStack(1, col, sha, inverted))
 			DebugOnly {log.log(Level.INFO, "Sub Item Added: " + col + sha)}
 		}
 		list
@@ -57,9 +62,9 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 
 	override def canPlaceItemBlockOnSide(wrd: World, x: Int, y: Int, z: Int, side: Int, player: EntityPlayer, iStack: ItemStack): Boolean = {
 		if (ItemLamp.getData(iStack)._2 != Shapes.Block)
-			wrd.isBlockSolidOnSide(x, y, z, ForgeDirection.getOrientation(side))
+			wrd.isBlockSolidOnSide(x, y, z, ForgeDirection.getOrientation(side)) && super.canPlaceItemBlockOnSide(wrd, x, y, z, side, player, iStack)
 		else
-			true
+			super.canPlaceItemBlockOnSide(wrd, x, y, z, side, player, iStack)
 	}
 }
 
@@ -67,7 +72,7 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 	Item Damage Format:
 	Nibble 0: Color
 	Nibble 1: Shape
-	Nibble 2: 0 is off, 1 is on
+	Nibble 2: 0 is regular, 1 is inverted
  */
 object ItemLamp {
 	def buildStack(cnt: Int, col: Colors, sap: Shapes, isOn: Boolean): ItemStack = {
@@ -86,7 +91,7 @@ object ItemLamp {
 
 	def buildStack(te: TileLamp): ItemStack = {
 		DebugOnly {logInfo(te)}
-		if (te.color != null && te.shape != null)
+		if (te != null && te.color != null && te.shape != null)
 			buildStack(1, te.color, te.shape, te.isOn)
 		else
 			new ItemStack(0, 0, 0)
@@ -98,16 +103,17 @@ object ItemLamp {
 	}
 
 	def getData(input: Short): (Colors, Shapes, Boolean) = {
-		val info = BitShift.splitShortToNibbles(input)
-		(Colors.fromID(info(0)),
-			Shapes.fromID(info(1)),
-			info(2) == 1)
+		if (!dataMap.contains(input)) {
+			val info = BitShift.splitShortToNibbles(input)
+			dataMap += input ->(Colors.fromID(info(0)), Shapes.fromID(info(1)), info(2) == 1)
+		}
+		dataMap(input)
 	}
 
 	def getData(iStack: ItemStack): (Colors, Shapes, Boolean) = {
 		getData(iStack.getItemDamage.toShort)
 	}
+
+	private val dataMap = collection.mutable.WeakHashMap.empty[Short, (Colors, Shapes, Boolean)]
 }
-
-
 

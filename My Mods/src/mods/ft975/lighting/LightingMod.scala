@@ -48,6 +48,10 @@ object LightingMod {
 	def setupConfig() {
 		config.load()
 		blockID = config.getBlock("Lamp_Block", 2401).getInt
+		for (i <- 0 to 15) {
+			Colors.colArray(i) = config.get("Colors", Colors.colNameArray(i), Colors.colArray(i)).getString
+		}
+		Colors.darkenFactor = config.get("Special", "Darkening factor, all colors will be multiplied by this", Colors.darkenFactor).getDouble(Colors.darkenFactor).toFloat
 		config.save()
 	}
 
@@ -58,11 +62,11 @@ object LightingMod {
 		blockLamp.setCreativeTab(CreativeTabs.tabBlock)
 		for (col: Colors <- Colors.vals;
 		     sha: Shapes <- Shapes.vals;
-		     on: Boolean <- List(true, false)) {
-			val iS = ItemLamp.buildStack(1, col, sha, on)
-			LanguageRegistry.addName(iS, (if (on) "Lit" else "Unlit") + " " + col.name + " " + sha.name)
+		     inverted: Boolean <- List(true, false)) {
+			val iS = ItemLamp.buildStack(1, col, sha, inverted)
+			LanguageRegistry.addName(iS, (if (inverted) "Inverted " else "") + col.name + " " + sha.name)
 			DebugOnly {
-				log.log(Level.INFO, "registered " + col + sha + on)
+				log.log(Level.INFO, "registered " + col + sha + inverted)
 			}
 		}
 	}

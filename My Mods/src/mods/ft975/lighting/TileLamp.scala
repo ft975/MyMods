@@ -6,24 +6,36 @@ import net.minecraft.network.packet.{Packet, Packet132TileEntityData}
 import net.minecraft.network.INetworkManager
 import mods.ft975.lighting.render.RenderUtil
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraftforge.common.ForgeDirection
 
 class TileLamp extends TileEntity {
 	var color: Colors = null
 	var shape: Shapes = null
-	var isOn: Boolean = true
+	var inverted: Boolean = false
+	var side: ForgeDirection = null
+
+	def isOn: Boolean = { worldObj.getBlockMetadata(xCoord, yCoord, zCoord) == 1 }
+
+	def setRedstoneState(redstoneOn: Boolean) {
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, if (inverted && redstoneOn) 0 else if (inverted && !redstoneOn) 1 else if (!inverted && redstoneOn) 1 else 0, 3)
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+		DebugOnly(logInfo("Inverted: " + inverted + " & IsOn: " + isOn))
+	}
 
 	override def readFromNBT(NBTag: NBTTagCompound) {
 		super.readFromNBT(NBTag)
 		color = Colors.fromID(NBTag.getByte("C"))
 		shape = Shapes.fromID(NBTag.getByte("S"))
-		isOn = NBTag.getBoolean("O")
+		inverted = NBTag.getBoolean("I")
+		side = ForgeDirection.getOrientation(NBTag.getByte("P"))
 	}
 
 	override def writeToNBT(NBTag: NBTTagCompound) {
 		super.writeToNBT(NBTag)
-		NBTag.setByte("S", shape.meta)
-		NBTag.setByte("C", color.meta)
-		NBTag.setBoolean("O", isOn)
+		NBTag.setByte("S", if (shape != null) shape.meta else -1)
+		NBTag.setByte("C", if (color != null) color.meta else -1)
+		NBTag.setBoolean("I", inverted)
+		NBTag.setByte("P", if (side != null) side.ordinal.toByte else ForgeDirection.UNKNOWN.ordinal.toByte)
 	}
 
 	override def getDescriptionPacket: Packet = {
@@ -37,7 +49,7 @@ class TileLamp extends TileEntity {
 		readFromNBT(pkt.customParam1)
 	}
 
-	override def canUpdate: Boolean = true
+	override def canUpdate: Boolean = false
 
 	override def toString: String = "TileLamp @" + xCoord + ", " + yCoord + ", " + zCoord + ", With values: " + color + ", " + shape + ", isOn: " + isOn
 

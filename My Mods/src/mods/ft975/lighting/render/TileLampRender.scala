@@ -18,10 +18,8 @@ class TileLampRender extends TileEntitySpecialRenderer {
 			GL11.glPushMatrix()
 			GL11.glTranslatef(x.toFloat + 0.5F, y.toFloat + 1.5F, z.toFloat + 0.5F)
 			GL11.glScalef(1.0F, -1F, -1F)
-			RenderUtil.getModel(lamp.shape).render(lamp.color.color, isOn = true)
+			RenderUtil.getModel(lamp.shape).render(lamp.color.color, lamp.isOn, lamp.side)
 			GL11.glPopMatrix()
 		}
-
 	}
-
 }

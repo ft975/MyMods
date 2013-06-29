@@ -6,11 +6,12 @@ import net.minecraft.world.{IBlockAccess, World}
 import net.minecraft.item.ItemStack
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IconRegister
-import net.minecraft.util.{MovingObjectPosition, Icon}
+import net.minecraft.util.{AxisAlignedBB, MovingObjectPosition, Icon}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import java.util.logging.Level
-import mods.ft975.util.{BlockTESR, BlockHelper}
-import net.minecraft.entity.player.EntityPlayer
+import mods.ft975.util.{BlockHelper, BlockTESR}
+import java.util
+import mods.ft975.lighting.Shapes.{Bulb, Panel, Caged}
 
 class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with BlockTESR {
 	@SideOnly(Side.CLIENT)
@@ -36,21 +37,48 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 	def createNewTileEntity(world: World): TileEntity = new TileLamp()
 
 	override def getLightValue(world: IBlockAccess, x: Int, y: Int, z: Int): Int = {
-		world.getBlockTileEntity(x, y, z) match {
-			case te: TileLamp => if (te.isOn) 15 else 0
-			case _ => 15
-		}
-		15
+		val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
+		if (te != null && te.isOn) 15 else 0
 	}
 
-	override def harvestBlock(par1World: World, par2EntityPlayer: EntityPlayer, par3: Int, par4: Int, par5: Int, par6: Int) {}
+	override def getBlockDropped(world: World, x: Int, y: Int, z: Int, metadata: Int, fortune: Int): util.ArrayList[ItemStack] = {
+		val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
+		val al = new java.util.ArrayList[ItemStack](1)
+		if (te != null) al.add(ItemLamp.buildStack(te))
+		al
+	}
 
-	override def breakBlock(w: World, x: Int, y: Int, z: Int, meta: Int, par6: Int) {
-		BlockHelper.dropItemStack(List(
-			ItemLamp.buildStack(w.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]))
-			, w, x, y, z)
+	override def onNeighborBlockChange(wrd: World, x: Int, y: Int, z: Int, blockID: Int) {
+		val powered = wrd.isBlockIndirectlyGettingPowered(x, y, z)
+		val te = wrd.getBlockTileEntity(x, y, z)
+		if (te != null) {
+			te.asInstanceOf[TileLamp].setRedstoneState(powered)
+		}
+	}
 
-		super.breakBlock(w, x, y, z, meta, par6)
+	override def setBlockBoundsBasedOnState(iba: IBlockAccess, x: Int, y: Int, z: Int) {
+		val te = iba.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
+		if (te != null) {
+			te.shape match {
+				case Caged =>
+				case Shapes.Block =>
+					setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
+				case Panel =>
+					setBlockBounds(BlockHelper.getSidedAABB(0.0F, 0.0F, 0.0F, 1.0F, .0625F, 1.0F, te.side))
+				case Bulb =>
+			}
+		} else {
+			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
+		}
+	}
+
+	def setBlockBounds(aabb: AxisAlignedBB) {
+		this.minX = aabb.minX
+		this.minY = aabb.minY
+		this.minZ = aabb.minZ
+		this.maxX = aabb.maxX
+		this.maxY = aabb.maxY
+		this.maxZ = aabb.maxZ
 	}
 
 	override def getLightOpacity(world: World, x: Int, y: Int, z: Int): Int = 0
@@ -59,5 +87,5 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 	override def getRenderBlockPass: Int = 1
 
 	@SideOnly(Side.CLIENT)
-	override def canRenderInPass(pass: Int): Boolean = true
+	override def canRenderInPass(pass: Int): Boolean = pass == 0 || pass == 1
 }
