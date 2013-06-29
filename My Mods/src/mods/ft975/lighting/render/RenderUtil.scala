@@ -98,6 +98,10 @@ object RenderUtil {
 				case Block => ModelBlockLamp
 				case Panel => ModelPanelLamp
 				case Bulb => ModelBulbLamp
+				case _ => {
+					new Exception("Shape Match failed").printStackTrace()
+					ModelBlockLamp
+				}
 			}
 		}
 	}

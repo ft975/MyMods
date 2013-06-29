@@ -64,6 +64,10 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 				case Shapes.Block => setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
 				case Panel => setBlockBounds(BlockHelper.getSidedAABB(0.0F, 0.0F, 0.0F, 1.0F, .0625F, 1.0F, te.side))
 				case Bulb => setBlockBounds(BlockHelper.getSidedAABB(0.125F, 0, 0.125F, 0.875F, 0.40625F, 0.875F, te.side))
+				case _ => {
+					new Exception("Block bounds shape match failed").printStackTrace()
+					setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
+				}
 			}
 		} else {
 			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)

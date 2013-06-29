@@ -5,7 +5,7 @@ import java.util.logging.Level._
 
 trait PackageObjectBase {
 	var log: Logger = null
-	private val isDebug = true
+	private val isDebug = false
 
 	def DebugOnly(op: => Unit) {
 		if (isDebug) op
