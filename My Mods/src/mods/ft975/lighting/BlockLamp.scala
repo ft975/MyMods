@@ -13,7 +13,7 @@ import mods.ft975.util.BlockTESR
 import java.util
 
 class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with BlockTESR {
-	setLightValue(0)
+	setLightValue(-1)
 
 	override def getPickBlock(target: MovingObjectPosition, world: World, x: Int, y: Int, z: Int): ItemStack = {
 		val tempTe = world.getBlockTileEntity(x, y, z)
@@ -26,7 +26,9 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 	}
 
 	override def getLightValue(iba: IBlockAccess, x: Int, y: Int, z: Int): Int = {
-		if (iba.getBlockMetadata(x, y, z) == 1) 15 else 0
+		val te = iba.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
+		//	DebugOnly(logInfo(te))
+		if (te != null && te.isOn) 15 else 0
 	}
 
 	override def getBlockDropped(world: World, x: Int, y: Int, z: Int, metadata: Int, fortune: Int): util.ArrayList[ItemStack] = {
@@ -50,8 +52,11 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 		else true
 	}
 
+	override def onBlockEventReceived(par1World: World, par2: Int, par3: Int, par4: Int, par5: Int, par6: Int): Boolean = super.onBlockEventReceived(par1World, par2, par3, par4, par5, par6)
+
 	override def onBlockAdded(wrd: World, x: Int, y: Int, z: Int) {
 		super.onBlockAdded(wrd, x, y, z)
+		DebugOnly(logInfo("Block added"))
 		onNeighborBlockChange(wrd, x, y, z, 1)
 	}
 
@@ -82,8 +87,6 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 		this.maxY = aabb.maxY
 		this.maxZ = aabb.maxZ
 	}
-
-	override def getLightOpacity(world: World, x: Int, y: Int, z: Int): Int = 0
 
 	def createNewTileEntity(world: World): TileEntity = new TileLamp()
 

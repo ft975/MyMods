@@ -10,6 +10,7 @@ import net.minecraftforge.common.ForgeDirection
 import net.minecraft.util.AxisAlignedBB
 import mods.ft975.lighting.Shapes.{Bulb, Panel, Caged}
 import mods.ft975.util.BlockHelper
+import net.minecraft.world.World
 
 class TileLamp extends TileEntity {
 	override def updateEntity() { setRedstoneState(worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) }
@@ -59,32 +60,30 @@ class TileLamp extends TileEntity {
 
 	override def toString: String = "TileLamp @" + xCoord + ", " + yCoord + ", " + zCoord + ", With values: " + color + ", " + shape + ", isOn: " + isOn
 
+	override def shouldRefresh(oldID: Int, newID: Int, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int): Boolean = false
+
 	@SideOnly(Side.CLIENT)
 	override def shouldRenderInPass(pass: Int): Boolean = { RenderUtil.renderPass = pass; true }
 }
 
 object TileLamp {
-	private var prevShape: Shapes = Shapes.Block
-
 	def getAABBFromTile(te: TileLamp): AxisAlignedBB = {
 		if (te != null) {
 			getAABBFromShape(te.shape, te.side)
 		} else {
-			AxisAlignedBB.getAABBPool.getAABB(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
+			AxisAlignedBB.getAABBPool.getAABB(0.5F, 0.5F, 0.5F, 0.5F, 0.5F, 0.5F)
 		}
 	}
 
 	private def getAABBFromShape(s: Shapes, side: ForgeDirection): AxisAlignedBB = {
-		if (s != null) prevShape = s
-
 		s match {
 			case Caged => BlockHelper.getSidedAABB(0.1875F, 0, 0.1875F, 0.8125F, 0.4375F, 0.8125F, side)
 			case Shapes.Block => AxisAlignedBB.getAABBPool.getAABB(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
 			case Panel => BlockHelper.getSidedAABB(0.0F, 0.0F, 0.0F, 1.0F, .0625F, 1.0F, side)
 			case Bulb => BlockHelper.getSidedAABB(0.125F, 0, 0.125F, 0.875F, 0.40625F, 0.875F, side)
 			case _ => {
-				DebugOnly {new Exception("Invalid shape " + s).printStackTrace()}
-				getAABBFromShape(prevShape, side)
+				//DebugOnly {new Exception("Invalid shape " + s).printStackTrace()}
+				AxisAlignedBB.getAABBPool.getAABB(0.5F, 0.5F, 0.5F, 0.5F, 0.5F, 0.5F)
 			}
 		}
 	}
