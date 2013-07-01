@@ -49,7 +49,9 @@ object BlockHelper {
 			case ForgeDirection.SOUTH => pool.getAABB(x0, 1 - z1, 1 - y1, x1, 1 - z0, 1 - y0)
 			case ForgeDirection.WEST => pool.getAABB(y1, 1 - x1, z0, y0, 1 - x0, z1)
 			case ForgeDirection.EAST => pool.getAABB(1 - y1, 1 - x1, z0, 1 - y0, 1 - x0, z1)
-			case ForgeDirection.UNKNOWN => pool.getAABB(0, 0, 0, 1, 1, 1)
+			case _ =>
+				DebugOnly {new Exception("Invalid direction " + side).printStackTrace()}
+				pool.getAABB(0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
 		}
 	}
 }

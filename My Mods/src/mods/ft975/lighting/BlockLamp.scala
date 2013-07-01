@@ -9,17 +9,11 @@ import net.minecraft.client.renderer.texture.IconRegister
 import net.minecraft.util.{AxisAlignedBB, MovingObjectPosition, Icon}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import java.util.logging.Level
-import mods.ft975.util.{BlockHelper, BlockTESR}
+import mods.ft975.util.BlockTESR
 import java.util
-import mods.ft975.lighting.Shapes.{Bulb, Panel, Caged}
 
 class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with BlockTESR {
-	@SideOnly(Side.CLIENT)
-	override def getIcon(id: Int, meta: Int): Icon = Block.stone.getIcon(Block.stone.blockID, 0)
-
-	@SideOnly(Side.CLIENT)
-	override def registerIcons(iR: IconRegister) {
-	}
+	setLightValue(0)
 
 	override def getPickBlock(target: MovingObjectPosition, world: World, x: Int, y: Int, z: Int): ItemStack = {
 		val tempTe = world.getBlockTileEntity(x, y, z)
@@ -27,18 +21,12 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 			case tempTe: TileLamp => tempTe
 			case _ => throw new ClassCastException
 		}
-		println(te)
-		DebugOnly {
-			log.log(Level.INFO, ItemLamp.getData(ItemLamp.buildStack(1, te.color, te.shape, te.isOn)).toString())
-		}
+		DebugOnly {log.log(Level.INFO, ItemLamp.getData(ItemLamp.buildStack(1, te.color, te.shape, te.isOn)).toString())}
 		ItemLamp.buildStack(1, te.color, te.shape, te.isOn)
 	}
 
-	def createNewTileEntity(world: World): TileEntity = new TileLamp()
-
-	override def getLightValue(world: IBlockAccess, x: Int, y: Int, z: Int): Int = {
-		val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
-		if (te != null && te.isOn) 15 else 0
+	override def getLightValue(iba: IBlockAccess, x: Int, y: Int, z: Int): Int = {
+		if (iba.getBlockMetadata(x, y, z) == 1) 15 else 0
 	}
 
 	override def getBlockDropped(world: World, x: Int, y: Int, z: Int, metadata: Int, fortune: Int): util.ArrayList[ItemStack] = {
@@ -56,22 +44,34 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 		}
 	}
 
+	override def isBlockNormalCube(world: World, x: Int, y: Int, z: Int): Boolean = {
+		val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
+		if (te != null) te.shape == Shapes.Block
+		else true
+	}
+
+	override def onBlockAdded(wrd: World, x: Int, y: Int, z: Int) {
+		super.onBlockAdded(wrd, x, y, z)
+		onNeighborBlockChange(wrd, x, y, z, 1)
+	}
+
+	override def getSelectedBoundingBoxFromPool(wrd: World, x: Int, y: Int, z: Int): AxisAlignedBB = getCollisionBoundingBoxFromPool(wrd, x, y, z)
+
 	override def setBlockBoundsBasedOnState(iba: IBlockAccess, x: Int, y: Int, z: Int) {
 		val te = iba.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
-		if (te != null) {
-			te.shape match {
-				case Caged => setBlockBounds(BlockHelper.getSidedAABB(0.1875F, 0, 0.1875F, 0.8125F, 0.4375F, 0.8125F, te.side))
-				case Shapes.Block => setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
-				case Panel => setBlockBounds(BlockHelper.getSidedAABB(0.0F, 0.0F, 0.0F, 1.0F, .0625F, 1.0F, te.side))
-				case Bulb => setBlockBounds(BlockHelper.getSidedAABB(0.125F, 0, 0.125F, 0.875F, 0.40625F, 0.875F, te.side))
-				case _ => {
-					new Exception("Block bounds shape match failed").printStackTrace()
-					setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
-				}
-			}
-		} else {
-			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
-		}
+		setBlockBounds(TileLamp.getAABBFromTile(te))
+	}
+
+	override def getCollisionBoundingBoxFromPool(wrd: World, x: Int, y: Int, z: Int): AxisAlignedBB = {
+		val te = wrd.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
+		val aabb = TileLamp.getAABBFromTile(te)
+		aabb.minX += x
+		aabb.minY += y
+		aabb.minZ += z
+		aabb.maxX += x
+		aabb.maxY += y
+		aabb.maxZ += z
+		aabb
 	}
 
 	def setBlockBounds(aabb: AxisAlignedBB) {
@@ -85,9 +85,17 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 
 	override def getLightOpacity(world: World, x: Int, y: Int, z: Int): Int = 0
 
+	def createNewTileEntity(world: World): TileEntity = new TileLamp()
+
 	@SideOnly(Side.CLIENT)
 	override def getRenderBlockPass: Int = 1
 
 	@SideOnly(Side.CLIENT)
+	override def registerIcons(iR: IconRegister) {}
+
+	@SideOnly(Side.CLIENT)
 	override def canRenderInPass(pass: Int): Boolean = pass == 0 || pass == 1
+
+	@SideOnly(Side.CLIENT)
+	override def getIcon(id: Int, meta: Int): Icon = Block.stone.getIcon(Block.stone.blockID, 0)
 }

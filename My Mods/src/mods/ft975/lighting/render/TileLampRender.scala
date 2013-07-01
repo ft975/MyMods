@@ -10,11 +10,12 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 class TileLampRender extends TileEntitySpecialRenderer {
 
 	def renderTileEntityAt(te: TileEntity, x: Double, y: Double, z: Double, tick: Float) {
+		if (te == null) return
 		val lamp: TileLamp = te match {
 			case te: TileLamp => te
 			case _ => throw new ClassCastException("te is not of type TileLamp")
 		}
-		if (lamp.shape != null) {
+		if (lamp.shape != null && lamp.color != null && lamp.side != null) {
 			GL11.glPushMatrix()
 			GL11.glTranslatef(x.toFloat + 0.5F, y.toFloat + 1.5F, z.toFloat + 0.5F)
 			GL11.glScalef(1.0F, -1F, -1F)

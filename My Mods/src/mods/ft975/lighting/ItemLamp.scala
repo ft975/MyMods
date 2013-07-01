@@ -92,7 +92,7 @@ object ItemLamp {
 	def buildStack(te: TileLamp): ItemStack = {
 		DebugOnly {logInfo(te)}
 		if (te != null && te.color != null && te.shape != null)
-			buildStack(1, te.color, te.shape, te.isOn)
+			buildStack(1, te.color, te.shape, te.inverted)
 		else
 			new ItemStack(0, 0, 0)
 	}
@@ -114,6 +114,6 @@ object ItemLamp {
 		getData(iStack.getItemDamage.toShort)
 	}
 
-	private val dataMap = collection.mutable.WeakHashMap.empty[Short, (Colors, Shapes, Boolean)]
+	private val dataMap = collection.mutable.Map.empty[Short, (Colors, Shapes, Boolean)]
 }
 

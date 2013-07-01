@@ -17,13 +17,14 @@ trait ModelLamp extends ModelBase {
 	protected val texW: Int
 	protected val texH: Int
 	val texture: String
+	lazy val textureLoc = ModInfo.resourceFolder + texture
 
 	protected val DefaultColor = new Color(1F, 0F, 1F)
 
 	def getRenderValues(typ: ItemRenderType): (Float, Float, Float, Float)
 
 	def render(col: Color, isOn: Boolean, isItem: Boolean) {
-		FMLClientHandler.instance.getClient.renderEngine.bindTexture(ModInfo.resourceFolder + texture)
+		FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureLoc)
 		if (Base != null) Base.render(0.0625F)
 		if (Cover != null) RenderUtil.renderInOut(Cover, 0.0625F)
 		RenderUtil.renderBulbRays(Bulb, Rays, 0.0625F, isOn, col, isItem)
