@@ -4,7 +4,7 @@ import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.world.World
 import net.minecraft.tileentity.TileEntity
-import mods.ft975.util.BlockTESR
+import mods.ft975.util.block.BlockTESR
 
 class BlockTube(id: Int) extends BlockContainer(id, Material.glass) with BlockTESR {
 

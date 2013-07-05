@@ -1,4 +1,4 @@
-package mods.ft975.util
+package mods.ft975.util.block
 
 import net.minecraft.block.BlockContainer
 import net.minecraft.world.IBlockAccess
