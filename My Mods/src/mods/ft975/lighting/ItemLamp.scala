@@ -25,7 +25,7 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 			val data = ItemLamp.getData(stack)
 			tile.color = data._1
 			tile.shape = data._2
-			tile.inverted = data._3
+			tile.inv = data._3
 			tile.side = ForgeDirection.getOrientation(side).getOpposite
 			tile.setRedstoneState(world.isBlockIndirectlyGettingPowered(x, y, z))
 			true
@@ -92,7 +92,7 @@ object ItemLamp {
 	def buildStack(te: TileLamp): ItemStack = {
 		DebugOnly {logInfo(te)}
 		if (te != null && te.color != null && te.shape != null)
-			buildStack(1, te.color, te.shape, te.inverted)
+			buildStack(1, te.color, te.shape, te.inv)
 		else
 			new ItemStack(0, 0, 0)
 	}

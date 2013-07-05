@@ -6,14 +6,11 @@ import net.minecraftforge.common.ForgeDirection
 import mods.ft975.lighting.Shapes
 import Shapes.{Bulb, Panel, Block, Caged}
 import mods.ft975.lighting.Shapes
-import scala.util.Random
 import net.minecraftforge.client.MinecraftForgeClient
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 
 @SideOnly(Side.CLIENT)
 object RenderUtil {
-	val rand = new Random()
-	var renderPass = 0
 
 	def renderInOut(mod: ModelRenderer, size: Float) {
 		GL11.glPushMatrix()
@@ -45,7 +42,7 @@ object RenderUtil {
 			// Setup texture and color
 			GL11.glDisable(GL11.GL_TEXTURE_2D)
 			GL11.glColor4f(col.R, col.G, col.B, .5f)
-
+			GL11.glScalef(1.00001F, 1.00001F, 1.00001F)
 			rays.render(size)
 
 			// Reset Pt 1

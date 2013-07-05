@@ -21,7 +21,7 @@ object Colors {
 		(Integer.parseInt(cols(0), 16).toShort, Integer.parseInt(cols(1), 16).toShort, Integer.parseInt(cols(2), 16).toShort)
 	}
 
-	def fromID(id: Byte): Colors = vals(id)
+	def fromID(id: Byte): Colors = if (id >= 0 && id <= vals.length) vals(id) else Black
 
 	protected def getColor(c: (Short, Short, Short)): Color = {
 		Color(c._1.toFloat / 255f, c._2.toFloat / 255f, c._3.toFloat / 255f)

@@ -23,7 +23,7 @@ class ItemLampRender extends IItemRenderer {
 
 	private def render(model: ModelLamp, x: Float, y: Float, z: Float, scale: Float, color: Color, on: Boolean) {
 		GL11.glPushMatrix()
-		GL11.glTranslatef(x.toFloat, y.toFloat, z.toFloat)
+		GL11.glTranslatef(x, y, z)
 		GL11.glRotatef(180, 1, 0, 0.0F)
 		GL11.glScalef(scale, scale, scale)
 		model.render(color, on, isItem = true)

@@ -13,7 +13,7 @@ class TileLampRender extends TileEntitySpecialRenderer {
 		if (te == null) return
 		val lamp: TileLamp = te match {
 			case te: TileLamp => te
-			case _ => throw new ClassCastException("te is not of type TileLamp")
+			case _ => throw new ClassCastException("base is not of type TileLamp")
 		}
 		if (lamp.shape != null && lamp.color != null && lamp.side != null) {
 			GL11.glPushMatrix()

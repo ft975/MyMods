@@ -19,6 +19,7 @@ object LightingMod {
 	var config: Configuration = null
 	var blockLamp: BlockLamp = null
 	var blockID: Int = 0
+	var creativeTabLighting: CreativeTabs = null
 
 	@PreInit
 	def preInit(event: FMLPreInitializationEvent) {
@@ -30,6 +31,14 @@ object LightingMod {
 	@Init
 	def init(event: FMLInitializationEvent) {
 		GameRegistry.registerTileEntity(classOf[TileLamp], "ftlamp")
+
+		creativeTabLighting = new CreativeTabs("ftLighting") {
+			LanguageRegistry.instance.addStringLocalization("itemGroup.ftLighting", "en_US", "Lighting")
+			lazy val icon = ItemLamp.buildStack(0, Colors.Magenta, Shapes.Block, true)
+
+			override def getIconItemStack = icon
+		}
+
 		setupBlocks()
 		registerRenders()
 	}
@@ -59,7 +68,7 @@ object LightingMod {
 		blockLamp = new BlockLamp(blockID)
 		blockLamp.setLightOpacity(0)
 		GameRegistry.registerBlock(blockLamp, classOf[ItemLamp], "BlockLamp", ModInfo.modID)
-		blockLamp.setCreativeTab(CreativeTabs.tabBlock)
+		blockLamp.setCreativeTab(creativeTabLighting)
 		for (col: Colors <- Colors.vals;
 		     sha: Shapes <- Shapes.vals;
 		     inverted: Boolean <- List(true, false)) {
@@ -70,8 +79,4 @@ object LightingMod {
 			}
 		}
 	}
-
-	def setupTileEntities() {}
-
-	def setupRender() {}
 }

@@ -9,7 +9,7 @@ sealed class Shapes(metaV: Byte, nameV: String, unLocNameV: String) {
 object Shapes {
 	val vals = List[Shapes](Caged, Block, Panel, Bulb)
 
-	def fromID(id: Byte): Shapes = vals(id)
+	def fromID(id: Byte): Shapes = if (id >= 0 && id <= vals.length) vals(id) else Block
 
 
 	case object Caged extends Shapes(0, "Caged Lamp", "caged")
