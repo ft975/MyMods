@@ -1,6 +1,6 @@
 package mods.ft975.lighting
 
-import net.minecraft.block.{Block, BlockContainer}
+import net.minecraft.block.{ITileEntityProvider, Block}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraft.item.ItemStack
@@ -11,8 +11,9 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import java.util.logging.Level
 import java.util
 import mods.ft975.util.block.BlockTESR
+import mods.ft975.util.extensibles.BlockExt
 
-class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with BlockTESR {
+class BlockLamp(id: Int) extends BlockExt(id, Material.redstoneLight) with BlockTESR with ITileEntityProvider {
 	override def getPickBlock(target: MovingObjectPosition, world: World, x: Int, y: Int, z: Int): ItemStack = {
 		val tempTe = world.getBlockTileEntity(x, y, z)
 		val te = tempTe match {
@@ -57,32 +58,6 @@ class BlockLamp(id: Int) extends BlockContainer(id, Material.redstoneLight) with
 	}
 
 	override def getSelectedBoundingBoxFromPool(wrd: World, x: Int, y: Int, z: Int): AxisAlignedBB = getCollisionBoundingBoxFromPool(wrd, x, y, z)
-
-	override def setBlockBoundsBasedOnState(iba: IBlockAccess, x: Int, y: Int, z: Int) {
-		val te = iba.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
-		setBlockBounds(TileLamp.getAABBFromTile(te))
-	}
-
-	override def getCollisionBoundingBoxFromPool(wrd: World, x: Int, y: Int, z: Int): AxisAlignedBB = {
-		val te = wrd.getBlockTileEntity(x, y, z).asInstanceOf[TileLamp]
-		val aabb = TileLamp.getAABBFromTile(te)
-		aabb.minX += x
-		aabb.minY += y
-		aabb.minZ += z
-		aabb.maxX += x
-		aabb.maxY += y
-		aabb.maxZ += z
-		aabb
-	}
-
-	def setBlockBounds(aabb: AxisAlignedBB) {
-		this.minX = aabb.minX
-		this.minY = aabb.minY
-		this.minZ = aabb.minZ
-		this.maxX = aabb.maxX
-		this.maxY = aabb.maxY
-		this.maxZ = aabb.maxZ
-	}
 
 	def createNewTileEntity(world: World): TileEntity = new TileLamp()
 

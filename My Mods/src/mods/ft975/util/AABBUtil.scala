@@ -4,8 +4,6 @@ import net.minecraftforge.common.ForgeDirection
 import net.minecraft.util.AxisAlignedBB
 
 object AABBUtil {
-	implicit def implicitAABB2Obj(aabb: AxisAlignedBB): _ = aabb
-
 	final val NullAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1)
 
 	def getSidedAABB(x0: Float, y0: Float, z0: Float, x1: Float, y1: Float, z1: Float, side: ForgeDirection): AxisAlignedBB = {

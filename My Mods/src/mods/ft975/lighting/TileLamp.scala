@@ -57,6 +57,19 @@ class TileLamp extends TileExt {
 		readFromNBT(pkt.customParam1)
 	}
 
+	override def getOneAABB: AxisAlignedBB = {
+		shape match {
+			case Caged => AABBUtil.getSidedAABB(0.1875F, 0, 0.1875F, 0.8125F, 0.4375F, 0.8125F, side)
+			case Shapes.Block => AxisAlignedBB.getAABBPool.getAABB(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
+			case Panel => AABBUtil.getSidedAABB(0.0F, 0.0F, 0.0F, 1.0F, .0625F, 1.0F, side)
+			case Bulb => AABBUtil.getSidedAABB(0.125F, 0, 0.125F, 0.875F, 0.40625F, 0.875F, side)
+			case _ => {
+				DebugOnly {new Exception("Invalid shape " + shape).printStackTrace()}
+				AxisAlignedBB.getAABBPool.getAABB(0, 0, 0, 1, 1, 1)
+			}
+		}
+	}
+
 	override def getRenderBoundingBox: AxisAlignedBB = AxisAlignedBB.getAABBPool.getAABB(0 + x, 0 + y, 0 + z, 1 + x, 1 + y, 1 + z)
 
 	override def canUpdate: Boolean = false
@@ -68,30 +81,5 @@ class TileLamp extends TileExt {
 	@SideOnly(Side.CLIENT)
 	override def shouldRenderInPass(pass: Int): Boolean = { true }
 }
-
-object TileLamp {
-	def getAABBFromTile(te: TileLamp): AxisAlignedBB = {
-		if (te != null) {
-			getAABBFromShape(te.shape, te.side)
-		} else {
-			AxisAlignedBB.getAABBPool.getAABB(0, 0, 0, 1, 1, 1)
-		}
-	}
-
-	private def getAABBFromShape(s: Shapes, side: ForgeDirection): AxisAlignedBB = {
-		s match {
-			case Caged => AABBUtil.getSidedAABB(0.1875F, 0, 0.1875F, 0.8125F, 0.4375F, 0.8125F, side)
-			case Shapes.Block => AxisAlignedBB.getAABBPool.getAABB(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F)
-			case Panel => AABBUtil.getSidedAABB(0.0F, 0.0F, 0.0F, 1.0F, .0625F, 1.0F, side)
-			case Bulb => AABBUtil.getSidedAABB(0.125F, 0, 0.125F, 0.875F, 0.40625F, 0.875F, side)
-			case _ => {
-				DebugOnly {new Exception("Invalid shape " + s).printStackTrace()}
-				AxisAlignedBB.getAABBPool.getAABB(0, 0, 0, 1, 1, 1)
-			}
-		}
-	}
-}
-
-
 
 

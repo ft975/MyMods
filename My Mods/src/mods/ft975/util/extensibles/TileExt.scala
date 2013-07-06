@@ -6,6 +6,7 @@ import net.minecraftforge.common.ForgeDirection
 import net.minecraft.world.IBlockAccess
 import net.minecraft.util.{AxisAlignedBB, Icon}
 import mods.ft975.util.AABBUtil
+import net.minecraft.block.Block
 
 abstract class TileExt extends TileEntity {
 	//<editor-fold desc="Block">
@@ -61,7 +62,7 @@ abstract class TileExt extends TileEntity {
 
 	//<editor-fold desc="Texture">
 
-	def getTexture(side: ForgeDirection): Icon = blockType.getIcon(side.ordinal(), metadata)
+	def getTexture(side: ForgeDirection): Icon = Block.blockGold.getIcon(side.ordinal(), metadata)
 
 	//</editor-fold>
 	//<editor-fold desc="AABBs">

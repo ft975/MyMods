@@ -22,11 +22,11 @@ class EntityDiggingParticle(wrd: World, posX: Double, posY: Double, posZ: Double
 	override def getFXLayer: Int = 1
 
 	override def renderParticle(tess: Tessellator, interpC: Float, xVal: Float, yVal: Float, zVal: Float, uMod: Float, vMod: Float) {
-		var u1 = (particleTextureIndexX + particleTextureJitterX / 4.0F) / 16.0F
-		var u2 = u1 + 0.015609375F
-		var v1 = (particleTextureIndexY + particleTextureJitterY / 4.0F) / 16.0F
-		var v2 = v1 + 0.015609375F
-		val scale = 0.1F * particleScale
+		var u1: Float = (particleTextureIndexX + particleTextureJitterX / 4.0F) / 16.0F
+		var u2: Float = u1 + 0.015609375F
+		var v1: Float = (particleTextureIndexY + particleTextureJitterY / 4.0F) / 16.0F
+		var v2: Float = v1 + 0.015609375F
+		val scale: Float = 0.1F * particleScale
 
 		if (particleIcon != null) {
 			u1 = particleIcon.getInterpolatedU(particleTextureJitterX / 4.0F * 16.0F)
@@ -34,12 +34,14 @@ class EntityDiggingParticle(wrd: World, posX: Double, posY: Double, posZ: Double
 			v1 = particleIcon.getInterpolatedV(particleTextureJitterY / 4.0F * 16.0F)
 			v2 = particleIcon.getInterpolatedV((particleTextureJitterY + 1.0F) / 4.0F * 16.0F)
 		}
-		val vX = prevPosX + (posX - prevPosX) * interpC - EntityFX.interpPosX
-		val vY = prevPosY + (posY - prevPosY) * interpC - EntityFX.interpPosY
-		val vZ = prevPosZ + (posZ - prevPosZ) * interpC - EntityFX.interpPosZ
-		val colorModifier = 1.0F
+
+		val vX: Double = prevPosX + (posX - prevPosX) * interpC - EntityFX.interpPosX
+		val vY: Double = prevPosY + (posY - prevPosY) * interpC - EntityFX.interpPosY
+		val vZ: Double = prevPosZ + (posZ - prevPosZ) * interpC - EntityFX.interpPosZ
+		val colorModifier: Float = 1.0F
 
 		tess.setColorOpaque_F(colorModifier * particleRed, colorModifier * particleGreen, colorModifier * particleBlue)
+
 		tess.addVertexWithUV(vX - xVal * scale - uMod * scale, vY - yVal * scale, vZ - zVal * scale - vMod * scale, u1, v2)
 		tess.addVertexWithUV(vX - xVal * scale + uMod * scale, vY + yVal * scale, vZ - zVal * scale + vMod * scale, u1, v1)
 		tess.addVertexWithUV(vX + xVal * scale + uMod * scale, vY + yVal * scale, vZ + zVal * scale + vMod * scale, u2, v1)
