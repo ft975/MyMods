@@ -8,6 +8,7 @@ import mods.ft975.lighting.ModInfo
 import mods.ft975.lighting.render.RenderUtil.Color
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 
+
 @SideOnly(Side.CLIENT)
 trait ModelLamp extends ModelBase {
 	protected val Base: ModelRenderer
@@ -28,7 +29,6 @@ trait ModelLamp extends ModelBase {
 		if (Base != null) Base.render(0.0625F)
 		if (Cover != null) RenderUtil.renderInOut(Cover, 0.0625F)
 		RenderUtil.renderBulbRays(Bulb, Rays, 0.0625F, isOn, col, isItem)
-		FMLClientHandler.instance.getClient.renderEngine.resetBoundTexture()
 	}
 
 	def render(col: Color, isOn: Boolean, side: ForgeDirection) {

@@ -6,8 +6,8 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 
 @SideOnly(Side.CLIENT)
 object ModelBulbLamp extends ModelLamp {
-	protected val Base: ModelRenderer = new ModelRenderer(this, 1, 1)
-	protected val Bulb: ModelRenderer = new ModelRenderer(this, 1, 15)
+	protected val Base: ModelRenderer = new ModelRenderer(this, 0, 0)
+	protected val Bulb: ModelRenderer = new ModelRenderer(this, 0, 13)
 	protected val Cover: ModelRenderer = null
 	protected val Rays: ModelRenderer = new ModelRenderer(this)
 	protected val texW: Int = 64

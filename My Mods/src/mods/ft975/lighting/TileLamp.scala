@@ -74,7 +74,7 @@ class TileLamp extends TileExt {
 
 	override def canUpdate: Boolean = false
 
-	override def toString: String = "TileLamp @" + x + ", " + y + ", " + z + ", With values: " + color + ", " + shape + ", isOn: " + isOn
+	override def toString: String = "TileLamp @" + x + ", " + y + ", " + z + ", With values: " + color + ", " + shape + ", renderRays: " + isOn
 
 	override def shouldRefresh(oldID: Int, newID: Int, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int): Boolean = false
 

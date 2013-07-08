@@ -24,6 +24,7 @@ object LightingMod {
 	@PreInit
 	def preInit(event: FMLPreInitializationEvent) {
 		config = new Configuration(event.getSuggestedConfigurationFile)
+		mods.ft975.util.log = event.getModLog
 		log = event.getModLog
 		setupConfig()
 	}
@@ -34,7 +35,7 @@ object LightingMod {
 
 		creativeTabLighting = new CreativeTabs("ftLighting") {
 			LanguageRegistry.instance.addStringLocalization("itemGroup.ftLighting", "en_US", "Lighting")
-			lazy val icon = ItemLamp.buildStack(0, Colors.Magenta, Shapes.Block, true)
+			lazy val icon = ItemLamp.buildStack(0, Colors.Magenta, Shapes.Block, isOn = true)
 
 			override def getIconItemStack = icon
 		}

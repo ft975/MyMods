@@ -7,9 +7,9 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType
 
 @SideOnly(Side.CLIENT)
 object ModelCagedLamp extends ModelLamp {
-	protected override val Base: ModelRenderer = new ModelRenderer(this, 1, 1)
-	protected override val Bulb: ModelRenderer = new ModelRenderer(this, 30, 15)
-	protected override val Cover: ModelRenderer = new ModelRenderer(this, 1, 13)
+	protected override val Base: ModelRenderer = new ModelRenderer(this, 0, 0)
+	protected override val Bulb: ModelRenderer = new ModelRenderer(this, 28, 12)
+	protected override val Cover: ModelRenderer = new ModelRenderer(this, 0, 11)
 	protected override val Rays: ModelRenderer = new ModelRenderer(this)
 	override val texture = "caged.png"
 	protected override val texW: Int = 64

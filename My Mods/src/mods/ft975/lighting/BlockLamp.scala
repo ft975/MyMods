@@ -65,7 +65,9 @@ class BlockLamp(id: Int) extends BlockExt(id, Material.redstoneLight) with Block
 	override def getRenderBlockPass: Int = 1
 
 	@SideOnly(Side.CLIENT)
-	override def registerIcons(iR: IconRegister) {}
+	override def registerIcons(iR: IconRegister) {
+
+	}
 
 	@SideOnly(Side.CLIENT)
 	override def canRenderInPass(pass: Int): Boolean = pass == 0 || pass == 1
