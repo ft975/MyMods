@@ -3,8 +3,8 @@
   <component name="FacetManager">
     <facet type="scala" name="Scala">
       <configuration>
-        <option name="compilerLibraryLevel" value="Global" />
-        <option name="compilerLibraryName" value="Scala" />
+        <option name="compilerLibraryLevel" value="Project" />
+        <option name="compilerLibraryName" value="Core Libraries" />
         <option name="explainTypeErrors" value="true" />
         <option name="optimiseBytecode" value="true" />
       </configuration>
@@ -18,6 +18,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Minecraft Forge" />
+    <orderEntry type="library" exported="" name="Core Libraries" level="project" />
   </component>
 </module>
 

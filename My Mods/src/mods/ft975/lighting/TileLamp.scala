@@ -6,16 +6,17 @@ import net.minecraft.network.INetworkManager
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.util.AxisAlignedBB
-import mods.ft975.lighting.Shapes.{Bulb, Panel, Caged}
+import mods.ft975.lighting.Shapes.{Block, Bulb, Panel, Caged}
 import mods.ft975.util.AABBUtil
 import net.minecraft.world.World
 import mods.ft975.util.extensibles.TileExt
 
 class TileLamp extends TileExt {
   override def updateEntity() {
-    if (hasChanged) {
+    if (hasChanged > 0) {
       worldObj.markBlockForUpdate(x, y, z)
       worldObj.updateAllLightTypes(x, y, z)
+      hasChanged -= 1
     }
   }
 
@@ -24,11 +25,12 @@ class TileLamp extends TileExt {
   var inv: Boolean = false
   var side: ForgeDirection = null
   var isOn: Boolean = false
-  var hasChanged = false
+  // Stupid hack variable in order to force lighting to update
+  var hasChanged = 0
 
   def setRedstoneState(red: Boolean) {
     isOn = if (inv) !red else red
-    hasChanged = true
+    hasChanged = 2
     DebugOnly(logInfo("Inverted: " + inv + " & IsOn: " + isOn))
   }
 
@@ -39,6 +41,14 @@ class TileLamp extends TileExt {
     isOn = NBTag.getBoolean("O")
     inv = NBTag.getBoolean("I")
     side = ForgeDirection.getOrientation(NBTag.getByte("P"))
+  }
+
+  override def isBlockSolidOnSide(side: ForgeDirection): Boolean = shape match {
+    case Caged => false
+    case Block => true
+    case Panel => side == this.side
+    case Bulb => false
+    case _ => false
   }
 
   override def writeToNBT(NBTag: NBTTagCompound) {
@@ -85,9 +95,7 @@ class TileLamp extends TileExt {
   override def shouldRefresh(oldID: Int, newID: Int, oldMeta: Int, newMeta: Int, world: World, x: Int, y: Int, z: Int): Boolean = false
 
   @SideOnly(Side.CLIENT)
-  override def shouldRenderInPass(pass: Int): Boolean = {
-    true
-  }
+  override def shouldRenderInPass(pass: Int) = true
 }
 
 

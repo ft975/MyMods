@@ -3,7 +3,6 @@ package mods.ft975.util.extensibles
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.entity.Entity
 import net.minecraftforge.common.ForgeDirection
-import net.minecraft.world.IBlockAccess
 import net.minecraft.util.{AxisAlignedBB, Icon}
 import mods.ft975.util.AABBUtil
 import net.minecraft.block.Block
@@ -66,7 +65,7 @@ abstract class TileExt extends TileEntity {
 
   //</editor-fold>
 
-  def isBlockSolidOnSide(iba: IBlockAccess, x: Int, y1: Int, z: Int, side: ForgeDirection): Boolean = true
+  def isBlockSolidOnSide(side: ForgeDirection): Boolean = true
 
   //<editor-fold desc="Texture">
 
