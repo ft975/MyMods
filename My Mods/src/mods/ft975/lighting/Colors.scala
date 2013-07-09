@@ -20,7 +20,12 @@ object Colors {
 
   private def getCol(str: String): (Short, Short, Short) = {
     val cols = str.grouped(2).toList
-    (Integer.parseInt(cols(0), 16).toShort, Integer.parseInt(cols(1), 16).toShort, Integer.parseInt(cols(2), 16).toShort)
+    try {
+      (Integer.parseInt(cols(0), 16).toShort, Integer.parseInt(cols(1), 16).toShort, Integer.parseInt(cols(2), 16).toShort)
+    } catch {
+      case _: Throwable =>
+        throw new Exception("Config file is corrupted, please delete it or delete the section with the colors")
+    }
   }
 
   def fromID(id: Byte): Colors = if (id >= 0 && id <= vals.length) vals(id) else Black

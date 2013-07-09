@@ -4,40 +4,41 @@ import net.minecraft.client.model.{ModelRenderer, ModelBase}
 import net.minecraftforge.common.ForgeDirection
 import cpw.mods.fml.client.FMLClientHandler
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
-import mods.ft975.lighting.ModInfo
+import mods.ft975.lighting.{Colors, ModInfo}
 import mods.ft975.lighting.render.RenderUtil.Color
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 
-
 @SideOnly(Side.CLIENT)
 trait ModelLamp extends ModelBase {
-	protected val Base: ModelRenderer
-	protected val Bulb: ModelRenderer
-	protected val Cover: ModelRenderer
-	protected val Rays: ModelRenderer
-	protected val texW: Int
-	protected val texH: Int
-	val texture: String
-	lazy val textureLoc = ModInfo.resourceFolder + texture
+  protected val Base: ModelRenderer
+  protected val Bulb: ModelRenderer
+  protected val Cover: ModelRenderer
+  protected val Rays: ModelRenderer
+  protected val texW: Int
+  protected val texH: Int
+  val texture: String
+  lazy val textureLoc = ModInfo.resourceFolder + texture
+  lazy val nocolLoc = ModInfo.resourceFolder + "nocol_" + texture
 
-	protected val DefaultColor = new Color(1F, 0F, 1F)
+  protected val DefaultColor = new Color(1F, 0F, 1F)
 
-	def getRenderValues(typ: ItemRenderType): (Float, Float, Float, Float)
+  def getRenderValues(typ: ItemRenderType): (Float, Float, Float, Float)
 
-	def render(col: Color, isOn: Boolean, isItem: Boolean) {
-		FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureLoc)
-		if (Base != null) Base.render(0.0625F)
-		if (Cover != null) RenderUtil.renderInOut(Cover, 0.0625F)
-		RenderUtil.renderBulbRays(Bulb, Rays, 0.0625F, isOn, col, isItem)
-	}
+  def render(col: Colors, isOn: Boolean, isItem: Boolean) {
+    FMLClientHandler.instance.getClient.renderEngine.bindTexture(nocolLoc)
+    if (Base != null) Base.render(0.0625F)
+    if (Cover != null) RenderUtil.renderInOut(Cover, 0.0625F)
+    RenderUtil.renderBulbRays(Bulb, Rays, 0.0625F, isOn, col, isItem, textureLoc)
+    FMLClientHandler.instance.getClient.renderEngine.resetBoundTexture()
+  }
 
-	def render(col: Color, isOn: Boolean, side: ForgeDirection) {
-		RenderUtil.rotateRender(this, 0.0625F, col, isOn, side)
-	}
+  def render(col: Colors, isOn: Boolean, side: ForgeDirection) {
+    RenderUtil.rotateRender(this, 0.0625F, col, isOn, side)
+  }
 
-	protected def setRotation(model: ModelRenderer, x: Float, y: Float, z: Float) {
-		model.rotateAngleX = x
-		model.rotateAngleY = y
-		model.rotateAngleZ = z
-	}
+  protected def setRotation(model: ModelRenderer, x: Float, y: Float, z: Float) {
+    model.rotateAngleX = x
+    model.rotateAngleY = y
+    model.rotateAngleZ = z
+  }
 }

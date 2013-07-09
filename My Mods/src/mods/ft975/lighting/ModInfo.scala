@@ -15,5 +15,5 @@ object ModInfo {
 
 	final val versionMinecraft = "1.5.0"
 	@SideOnly(Side.CLIENT)
-	final val resourceFolder = "/mods/ft975/lighting/resource/"
+	final val resourceFolder = "/mods/ft975/lighting/res/"
 }

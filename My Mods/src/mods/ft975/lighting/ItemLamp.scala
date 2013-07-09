@@ -6,7 +6,7 @@ import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.ForgeDirection
 import java.util.logging.Level
-import mods.ft975.util.BitShift
+import mods.ft975.util.BitUtil
 import cpw.mods.fml.relauncher.{SideOnly, Side}
 
 class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
@@ -77,7 +77,7 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 object ItemLamp {
 	def buildStack(cnt: Int, col: Colors, sap: Shapes, isOn: Boolean): ItemStack = {
 		val iS = new ItemStack(LightingMod.blockLamp, cnt)
-		iS.setItemDamage(BitShift.getShortFromNibbles(Array[Byte](col.meta, sap.meta, if (isOn) 1 else 0, 0)))
+		iS.setItemDamage(BitUtil.getShortFromNibbles(Array[Byte](col.meta, sap.meta, if (isOn) 1 else 0, 0)))
 		iS
 	}
 
@@ -98,13 +98,13 @@ object ItemLamp {
 	}
 
 	private def isValidDamage(damage: Short): Boolean = {
-		val info = BitShift.splitShortToNibbles(damage)
+		val info = BitUtil.splitShortToNibbles(damage)
 		info(0) <= 15 && info(0) >= 0 && info(1) <= Shapes.vals.size && info(1) >= 0 && (info(3) == 1 || info(3) == 0)
 	}
 
 	def getData(input: Short): (Colors, Shapes, Boolean) = {
 		if (!dataMap.contains(input)) {
-			val info = BitShift.splitShortToNibbles(input)
+			val info = BitUtil.splitShortToNibbles(input)
 			dataMap += input ->(Colors.fromID(info(0)), Shapes.fromID(info(1)), info(2) == 1)
 		}
 		dataMap(input)

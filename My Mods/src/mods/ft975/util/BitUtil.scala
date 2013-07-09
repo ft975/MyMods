@@ -1,6 +1,6 @@
 package mods.ft975.util
 
-object BitShift {
+object BitUtil {
 
 	def splitShortToNibbles(x: Short): Array[Byte] = {
 		val byteArray = new Array[Byte](4)
