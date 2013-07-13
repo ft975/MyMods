@@ -1,4 +1,4 @@
-package mods.ft975.lighting
+package mods.ft975.light
 
 import net.minecraft.item.{ItemStack, ItemBlock}
 import net.minecraft.creativetab.CreativeTabs
@@ -6,8 +6,8 @@ import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.ForgeDirection
 import java.util.logging.Level
-import mods.ft975.util.BitUtil
 import cpw.mods.fml.relauncher.{SideOnly, Side}
+import mods.ft975.util.BitUtil
 
 class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 
@@ -52,8 +52,8 @@ class ItemLamp(itemID: Int) extends ItemBlock(itemID) {
 	lazy val subtypes = {
 		val list = new java.util.ArrayList[ItemStack]
 		for (inverted: Boolean <- List(true, false);
-		     sha: Shapes <- Shapes.vals;
-		     col: Colors <- Colors.vals) {
+				 sha: Shapes <- Shapes.vals;
+				 col: Colors <- Colors.vals) {
 			list.add(ItemLamp.buildStack(1, col, sha, inverted))
 			DebugOnly {log.log(Level.INFO, "Sub Item Added: " + col + sha)}
 		}

@@ -1,82 +1,82 @@
-package mods.ft975.util.extensibles
+package mods.ft975.util
+package extensibles
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.entity.Entity
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.util.{AxisAlignedBB, Icon}
-import mods.ft975.util.AABBUtil
 import net.minecraft.block.Block
 
 abstract class TileExt extends TileEntity {
-  //<editor-fold desc="Block">
+	//<editor-fold desc="Block">
 
-  def x = xCoord
+	def x = xCoord
 
-  def x_=(v: Int) {
-    xCoord = v
-  }
+	def x_=(v: Int) {
+		xCoord = v
+	}
 
-  def y = yCoord
+	def y = yCoord
 
-  def y_=(v: Int) {
-    yCoord = v
-  }
+	def y_=(v: Int) {
+		yCoord = v
+	}
 
-  def z = zCoord
+	def z = zCoord
 
-  def z_=(v: Int) {
-    zCoord = v
-  }
+	def z_=(v: Int) {
+		zCoord = v
+	}
 
-  def metadata = worldObj.getBlockMetadata(x, y, z)
+	def metadata = worldObj.getBlockMetadata(x, y, z)
 
-  def metadata_=(v: Byte) {
-    worldObj.setBlockMetadataWithNotify(x, y, z, v, 2)
-  }
+	def metadata_=(v: Byte) {
+		worldObj.setBlockMetadataWithNotify(x, y, z, v, 2)
+	}
 
-  //</editor-fold>
-  //<editor-fold desc="Light">
+	//</editor-fold>
+	//<editor-fold desc="Light">
 
-  def getLightValue: Int = 0
+	def getLightValue: Int = 0
 
-  def getLightOpacity: Int = 0
+	def getLightOpacity: Int = 0
 
-  //</editor-fold>
-  //<editor-fold desc="Hardness">
+	//</editor-fold>
+	//<editor-fold desc="Hardness">
 
-  /*
-   Dirt = 0.5, Stone = 1.5, Obsidian = 50
-   */
-  def getHardness: Float = 3
+	/*
+	 Dirt = 0.5, Stone = 1.5, Obsidian = 50
+	 */
+	def getHardness: Float = 3
 
-  /*
-   Stone = 10, Water = 500, Obsidian = 2000
-   */
-  def getExplosionResistance(entity: Entity, d: Double, d1: Double, d2: Double): Float = getHardness * 5
+	/*
+	 Stone = 10, Water = 500, Obsidian = 2000
+	 */
+	def getExplosionResistance(entity: Entity, d: Double, d1: Double, d2: Double): Float = getHardness * 5
 
-  //</editor-fold>
-  //<editor-fold desc="Redstone">
+	//</editor-fold>
+	//<editor-fold desc="Redstone">
 
-  def canConnectRedstone(side: ForgeDirection) = false
+	def canConnectRedstone(side: ForgeDirection) = false
 
-  def onNearbyBlockChange(blockID: Int) {}
+	def onNearbyBlockChange(blockID: Int) {}
 
-  def onRedstoneUpdate(on: Boolean) {}
+	def onRedstoneUpdate(on: Boolean) {}
 
-  //</editor-fold>
+	//</editor-fold>
 
-  def isBlockSolidOnSide(side: ForgeDirection): Boolean = true
+	def isBlockSolidOnSide(side: ForgeDirection): Boolean = true
 
-  //<editor-fold desc="Texture">
+	//<editor-fold desc="Texture">
 
-  def getTexture(side: ForgeDirection): Icon = Block.blockGold.getIcon(side.ordinal(), metadata)
+	def getTexture(side: ForgeDirection): Icon = Block.blockGold.getIcon(side.ordinal(), metadata)
 
-  //</editor-fold>
-  //<editor-fold desc="AABBs">
+	//</editor-fold>
+	//<editor-fold desc="AABBs">
 
-  def getAllAABBs: List[AxisAlignedBB] = List(getOneAABB)
+	def getAllAABBs: List[AxisAlignedBB] = List(getOneAABB)
 
-  def getOneAABB: AxisAlignedBB = AABBUtil.NullAABB
+	def getOneAABB: AxisAlignedBB = AABBUtil.NullAABB
 
-  //</editor-fold>
+	//</editor-fold>
 }

@@ -6,7 +6,6 @@
         <option name="compilerLibraryLevel" value="Project" />
         <option name="compilerLibraryName" value="Core Libraries" />
         <option name="explainTypeErrors" value="true" />
-        <option name="optimiseBytecode" value="true" />
       </configuration>
     </facet>
   </component>
@@ -17,8 +16,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="Minecraft Forge" />
     <orderEntry type="library" exported="" name="Core Libraries" level="project" />
+    <orderEntry type="module" module-name="Minecraft Forge 1.6" />
   </component>
 </module>
 
