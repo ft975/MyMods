@@ -3,9 +3,10 @@
   <component name="FacetManager">
     <facet type="scala" name="Scala">
       <configuration>
-        <option name="compilerLibraryLevel" value="Global" />
-        <option name="compilerLibraryName" value="Scala" />
+        <option name="compilerLibraryLevel" value="Project" />
+        <option name="compilerLibraryName" value="Core Libraries" />
         <option name="explainTypeErrors" value="true" />
+        <option name="languageLevel" value="Scala 2.10 virtualized" />
         <option name="optimiseBytecode" value="true" />
       </configuration>
     </facet>
@@ -26,15 +27,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///usr/share/java/scala-library.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="Core Libraries" level="project" />
   </component>
 </module>
 
