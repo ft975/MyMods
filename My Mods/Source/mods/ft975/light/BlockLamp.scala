@@ -76,7 +76,7 @@ class BlockLamp(id: Int) extends BlockExt(id, Material.circuits) with BlockTESR 
 
 	@SideOnly(Side.CLIENT)
 	override def registerIcons(iR: IconRegister) {
-		blockIcon = iR.registerIcon("ft975/lighting:part_block")
+		blockIcon = iR.registerIcon("ftlights:part_block")
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -128,7 +128,6 @@ class BlockLamp(id: Int) extends BlockExt(id, Material.circuits) with BlockTESR 
 				val d0: Double = x + ((j1 + 0.5D) / 4D)
 				val d1: Double = y + ((k1 + 0.5D) / 4D)
 				val d2: Double = z + ((l1 + 0.5D) / 4D)
-				val side: Int = rand.nextInt(6)
 
 				effRendr.addEffect(new EntityLampDiggingParticle(wrd, d0, d1, d2, d0 - x - 0.5D, d1 - y - 0.5D, d2 - z - 0.5D, blockIcon, te.color.color.R, te.color.color.G, te.color.color.B))
 			}

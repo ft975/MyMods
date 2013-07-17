@@ -12,6 +12,7 @@ import java.util
 import mods.ft975.util.particle.EntityDiggingParticle
 
 abstract class BlockExt(id: Int, mat: Material) extends Block(id, mat) with ITileEntityProvider {
+
 	//<editor-fold desc="Light">
 
 	override def getLightValue(iba: IBlockAccess, x: Int, y: Int, z: Int): Int =

@@ -14,7 +14,7 @@ import java.util.logging.Level
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.block.Block
 import mods.ft975.light.render.{TileLampRender, ItemLampRender}
-import mods.ft975.util.craft.{OreDictRecipe, AbstractRecipe}
+import mods.ft975.util.RecipeUtil
 
 @Mod(modid = ModInfo.modID, name = ModInfo.modName, version = ModInfo.version, acceptedMinecraftVersions = ModInfo.versionMinecraft, modLanguage = "scala")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
@@ -86,42 +86,66 @@ object LightingMod {
 		val glassPane = new ItemStack(Block.thinGlass)
 		val ironPane = new ItemStack(Block.fenceIron)
 		val stoneSlab = new ItemStack(Block.stoneSingleSlab, 1, 0)
-		val glowstoneDust = new ItemStack(Item.glowstone)
 		val redstoneDust = new ItemStack(Item.redstone)
 		val redstoneTorch = new ItemStack(Block.torchRedstoneActive)
-		val dyeArray = for (v <- 0 until 16) yield new ItemStack(Item.dyePowder, 1, v)
+		val dyeArray = Array("dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta", "dyeOrange", "dyeWhite")
 		val lampArray = for (col <- Colors.vals) yield buildStack(1, col) _
 
+		import RecipeUtil._
 		for (col <- dyeArray zip lampArray;
 				 inverted <- Array(true, false)) {
-			GameRegistry.addRecipe(new AbstractRecipe(3, 3,
-				Array(
-					Array(glassPane, redstoneDust, glassPane),
-					Array(redstoneDust, col._1, redstoneDust),
-					Array(glassPane, if (inverted) redstoneTorch else redstoneDust, glassPane)),
-				col._2(Shapes.Block, inverted)) with OreDictRecipe)
 
-			GameRegistry.addRecipe(new AbstractRecipe(3, 3,
-				Array(
-					Array(ironPane, redstoneDust, ironPane),
-					Array(redstoneDust, col._1, redstoneDust),
-					Array(stoneSlab, if (inverted) redstoneTorch else redstoneDust, stoneSlab)),
-				col._2(Shapes.Caged, inverted)) with OreDictRecipe)
+			addRecipe(col._2(Shapes.Block, inverted),
+				List(
+					"GrG",
+					"rCr",
+					"GRG"),
+				List(
+					'G' -> Right(glassPane),
+					'C' -> Left(col._1),
+					'r' -> Right(redstoneDust),
+					'R' -> Right(if (inverted) redstoneTorch else redstoneDust)
+				)
+			)
 
-			GameRegistry.addRecipe(new AbstractRecipe(3, 2,
-				Array(
-					Array[ItemStack](null, null, null),
-					Array(glassPane, col._1, glassPane),
-					Array(redstoneDust, if (inverted) redstoneTorch else redstoneDust, redstoneDust)),
-				col._2(Shapes.Block, inverted)) with OreDictRecipe)
+			addRecipe(col._2(Shapes.Caged, inverted),
+				List(
+					"IrI",
+					"rCr",
+					"SRS"),
+				List(
+					'I' -> Right(ironPane),
+					'C' -> Left(col._1),
+					'r' -> Right(redstoneDust),
+					'R' -> Right(if (inverted) redstoneTorch else redstoneDust),
+					'S' -> Right(stoneSlab)
+				)
+			)
 
-			//GameRegistry.addRecipe(new AbstractRecipe(3, 3,
-			//	Array(
-			//		Array(glassPane, redstoneDust, glassPane),
-			//		Array(redstoneDust, col._1, redstoneDust),
-			//		Array(glassPane, if (inverted) redstoneTorch else redstoneDust, glassPane)),
-			//	col._2(Shapes.Block, inverted)) with OreDictRecipe)
+			addRecipe(col._2(Shapes.Panel, inverted),
+				List(
+					"GCG",
+					"rRr"),
+				List(
+					'C' -> Left(col._1),
+					'G' -> Right(glassPane),
+					'r' -> Right(redstoneDust),
+					'R' -> Right(if (inverted) redstoneTorch else redstoneDust)
+				)
+			)
+
+			addRecipe(col._2(Shapes.Bulb, inverted),
+				List(
+					"SrS",
+					"rCr",
+					"SRS"),
+				List(
+					'C' -> Left(col._1),
+					'r' -> Right(redstoneDust),
+					'R' -> Right(if (inverted) redstoneTorch else redstoneDust),
+					'S' -> Right(stoneSlab)
+				)
+			)
 		}
-
 	}
 }

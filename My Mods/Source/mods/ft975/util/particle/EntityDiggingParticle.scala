@@ -10,7 +10,15 @@ import net.minecraft.world.World
 import net.minecraft.util.Icon
 
 @SideOnly(Side.CLIENT)
-class EntityDiggingParticle(wrd: World, pos1X: Double, pos1Y: Double, pos1Z: Double, motX: Double, motY: Double, motZ: Double, icon: Icon
+class EntityDiggingParticle(
+														 wrd: World,
+														 pos1X: Double,
+														 pos1Y: Double,
+														 pos1Z: Double,
+														 motX: Double,
+														 motY: Double,
+														 motZ: Double,
+														 icon: Icon
 														 ) extends EntityFX(wrd, pos1X, pos1Y, pos1Z, motX, motY, motZ) {
 
 	var r, g, b = 153
