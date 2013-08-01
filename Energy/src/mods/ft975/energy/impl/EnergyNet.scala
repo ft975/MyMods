@@ -44,7 +44,7 @@ class EnergyNet(world: World) extends AbstractEnergyNetwork(world) {
 			breakable {
 				for (side <- ForgeDirection.VALID_DIRECTIONS) {
 					if (te.isSideConnected(side) && numSides == 1) {
-						adjacentSet += te
+						//	adjacentSet += te   TODO
 						break()
 					} else if (te.isSideConnected(side)) {
 						numSides += 1

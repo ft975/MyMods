@@ -7,4 +7,6 @@ import net.minecraftforge.common.ForgeDirection
 class TileTestPowerS extends TileEntity with PowerImporter {
 	def getEnergyNet: AbstractEnergyNetwork = ???
 	def isSideConnected(side: ForgeDirection): Boolean = ???
+	def clearEnergyNet() {}
+	def setEnergyNet(enet: AbstractEnergyNetwork) {}
 }

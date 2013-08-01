@@ -8,21 +8,19 @@ import scala.xml.{MalformedAttributeException, NodeSeq, Elem}
 
 
 class Model(
-						 verts: Seq[Vertex],
+						 verts: Seq[Coord],
 						 colors: (Seq[Color], UsageType),
-						 uvs: (Seq[UV], UsageType),
-						 light: (Seq[Light], UsageType),
-						 normals: (Seq[Vector], UsageType)) {
+						 uvs: (Seq[Vector2], UsageType),
+						 normals: (Seq[Vector3], UsageType)) {
 
 	def render(x: Double, y: Double, z: Double) {
-		Tessellator.startQuads()
+		//	Tessellator.startQuads()
 		renderAlt(Pre, 0)
 		for (i <- 0 until verts.size) {
 			renderAlt(PerVert, i)
 			Tessellator.addVert(verts(i))
 		}
-		Tessellator.setOffset(x, y, z)
-		Tessellator.draw()
+		Tessellator.translate(x, y, z)
 	}
 
 	protected def renderAlt(stage: RenderStage, i: Int) {
@@ -36,11 +34,6 @@ class Model(
 			case Each => if (stage == PerVert) Tessellator.setUV(uvs._1(i))
 			case _ =>
 		}
-		light._2 match {
-			case Constant => if (stage == Pre) Tessellator.setLighting(light._1(0).lvl)
-			case Each => if (stage == PerVert) Tessellator.setLighting(light._1(i).lvl)
-			case _ =>
-		}
 		normals._2 match {
 			case Constant => if (stage == Pre) Tessellator.setNormal(normals._1(0))
 			case Each => if (stage == PerVert) Tessellator.setNormal(normals._1(i))
@@ -48,28 +41,25 @@ class Model(
 		}
 	}
 
-	override val hashCode: Int = ScalaRunTime._hashCode((verts, colors._1, uvs._1, light._1, normals._1))
-	override def equals(obj: Any): Boolean = ScalaRunTime._equals((verts, colors._1, uvs._1, light._1, normals._1), obj)
+	override val hashCode: Int = ScalaRunTime._hashCode((verts, colors._1, uvs._1, normals._1))
+	override def equals(obj: Any): Boolean = ScalaRunTime._equals((verts, colors._1, uvs._1, normals._1), obj)
 
 	override val toString: String = {
 		s"Verts: {${var str = " "; verts.foreach((v) => {str += s"$v, "}); str}}, " +
 			s"Colors {${var str = " "; if (colors._2 != Off) colors._1.foreach((v) => {str += s"$v, "}); str}}, " +
 			s"UVs {${var str = " "; if (uvs._2 != Off) uvs._1.foreach((v) => {str += s"$v, "})}; str}, " +
-			s"Lighting {${var str = " "; if (light._2 != Off) light._1.foreach((v) => {str += s"$v, "}); str}}, " +
 			s"Normals {${var str = " "; if (normals._2 != Off) normals._1.foreach((v) => {str += s"$v, "}); str}}"
 	}
 	def toXML: Elem = <Model>
 											<Config>
 												<Colors>{colors._2.toString}</Colors>
 												<UVCoords>{uvs._2.toString}</UVCoords>
-												<LightLevel>{light._2.toString}</LightLevel>
 												<Normals>{normals._2.toString}</Normals>
 											</Config>
 											<Data>
 												<Verts>{for (v <- verts) yield v.toXML}</Verts>
 												<Colors>{if (colors._1 != null) for (v <- colors._1) yield v.toXML else ""}</Colors>
 												<UVCoords>{if (uvs._1 != null) for (v <- uvs._1) yield v.toXML else ""}</UVCoords>
-												<LightLevel>{if (light._1 != null) for (v <- light._1) yield v.toXML else ""}</LightLevel>
 												<Normals>{if (normals._1 != null) for (v <- normals._1) yield v.toXML else ""}</Normals>
 											</Data>
 										</Model>
@@ -85,16 +75,14 @@ object Model {
 
 					val iCol = confMatch(conf \\ "Colors")
 					val iUVc = confMatch(conf \\ "UVCoords")
-					val iLgt = confMatch(conf \\ "LightLevel")
 					val iNrm = confMatch(conf \\ "Normals")
 
-					val dVrt = ((data \\ "Verts") \\ "vert").map(Vertex.fromXML)
+					val dVrt = ((data \\ "Verts") \\ "cord").map(Coord.fromXML)
 					val dCol = if (iCol == Off) {null} else {((data \\ "Colors") \\ "col").map(Color.fromXML)}
-					val dUVc = if (iUVc == Off) {null} else {((data \\ "UVCoords") \\ "uv").map(UV.fromXML)}
-					val dLgt = if (iLgt == Off) {null} else {((data \\ "LightLevel") \\ "lght").map(Light.fromXML)}
-					val dNrm = if (iNrm == Off) {null} else {((data \\ "Normals") \\ "vec").map(Vector.fromXML)}
+					val dUVc = if (iUVc == Off) {null} else {((data \\ "UVCoords") \\ "vec2").map(Vector2.fromXML)}
+					val dNrm = if (iNrm == Off) {null} else {((data \\ "Normals") \\ "vec3").map(Vector3.fromXML)}
 
-					return new Model(dVrt, (dCol, iCol), (dUVc, iUVc), (dLgt, iLgt), (dNrm, iNrm))
+					return new Model(dVrt, (dCol, iCol), (dUVc, iUVc), (dNrm, iNrm))
 				}
 				case _ => throw new InputMismatchException(xml.toString())
 			}
@@ -124,4 +112,12 @@ object Model {
 	case object PerVert extends RenderStage(1)
 }
 
-object ModelBuilder
+object ModelBuilder {
+	//def rectangle(x: Float, y: Float, z: Float, topIcon: Icon, bottomIcon: Icon): Model = {
+	//	if (!(x == 0 || y == 0 || z == 0)) {
+	//		throw new IllegalArgumentException("Too many dimensions, try cube()")
+	//	}
+	//	null
+	//}
+
+}

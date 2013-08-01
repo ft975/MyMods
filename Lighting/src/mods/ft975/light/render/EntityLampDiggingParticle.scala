@@ -1,6 +1,6 @@
-package mods.ft975.util.render
-package particle
+package mods.ft975.light.render
 
+import mods.ft975.util.render.particle.EntityDiggingParticle
 import mods.ft975.util.render.values.Color
 import net.minecraft.util.Icon
 import net.minecraft.world.World

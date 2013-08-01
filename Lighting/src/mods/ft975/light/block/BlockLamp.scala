@@ -8,7 +8,6 @@ import mods.ft975.light.tileentity.TileLamp
 import mods.ft975.light.util.LampShape
 import mods.ft975.util.block.BlockTESR
 import mods.ft975.util.extensibles.BlockExt
-import mods.ft975.util.render.particle.EntityLampDiggingParticle
 import net.minecraft.block.material.Material
 import net.minecraft.block.{ITileEntityProvider, Block}
 import net.minecraft.client.particle.EffectRenderer
@@ -17,6 +16,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{AxisAlignedBB, MovingObjectPosition, Icon}
 import net.minecraft.world.{IBlockAccess, World}
+import mods.ft975.light.render.EntityLampDiggingParticle
 
 class BlockLamp(id: Int) extends BlockExt(id, Material.circuits) with BlockTESR with ITileEntityProvider {
 	override def getBlockHardness(wrd: World, x: Int, y: Int, z: Int): Float = 3

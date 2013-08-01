@@ -2,6 +2,9 @@ package mods.ft975.util
 
 object BitUtil {
 
+	final val byte  : Byte = 8
+	final val nibble: Byte = 4
+
 	def splitShortToNibbles(x: Short): Array[Byte] = {
 		val byteArray = new Array[Byte](4)
 		byteArray(0) = ((x & 0x000F) >> 0).toByte

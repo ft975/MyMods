@@ -1,53 +1,72 @@
 package mods.ft975.util.render
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mods.ft975.util.render.DrawMode.DrawMode
+import mods.ft975.util.render.RenderEnum._
 import mods.ft975.util.render.values._
+import net.minecraft.util.Icon
+import org.lwjgl.opengl.GL11._
 
 @SideOnly(Side.CLIENT)
 object Tessellator {
-	private val tess = net.minecraft.client.renderer.Tessellator.instance
-
-	private var color = Color.White
-
 	def setColor(r: Double, g: Double, b: Double) { setColor(Color(r, g, b)) }
 	def setColor(r: Double, g: Double, b: Double, a: Double) { setColor(Color(r, g, b, a)) }
-	def setColor(col: Color) { color = col; setColor() }
-	private def setColor() { tess.setColorRGBA(color.r, color.b, color.g, color.a) }
+	def setColor(col: Color) { glColor4d(col.rD, col.gD, col.bD, col.aD) }
 
-	def disableColor() { tess.disableColor() }
-	def setLighting(level: Int) { tess.setBrightness(level) }
+	def translate(x: Double, y: Double, z: Double)(drawFunc: () => Unit) {
+		pushMatrix()
+		glTranslated(x, y, z)
+		drawFunc()
+		popMatrix()
+	}
+	def rotate(deg: Double, x: Double, y: Double, z: Double)(drawFunc: () => Unit) {
+		pushMatrix()
+		glRotated(deg, x, y, z)
+		drawFunc()
+		popMatrix()
+	}
+	def scale(scaleX: Double, scaleY: Double, scaleZ: Double)(drawFunc: () => Unit) {
+		pushMatrix()
+		glScaled(scaleX, scaleY, scaleZ)
+		drawFunc()
+		popMatrix()
+	}
+	def scale(scale: Double)(drawFunc: () => Unit) { this.scale(scale, scale, scale)(drawFunc) }
 
-	def translate(x: Double, y: Double, z: Double) { tess.addTranslation(x.toFloat, y.toFloat, z.toFloat) }
-	def setOffset(x: Double, y: Double, z: Double) { tess.setTranslation(x, y, z) }
+	def addVert(x: Double, y: Double, z: Double) { glVertex3d(x, y, z) }
+	def addVert(v: Coord) { glVertex3d(v.x, v.y, v.z) }
+
+	def setUV(u: Double, v: Double) { glTexCoord2d(u, v) }
+	def setUV(uv: Vector2) { enable(Toggleable.Texture2d); setUV(uv.u, uv.v) }
+	def setNormal(i: Double, j: Double, k: Double) { glNormal3d(i, j, k) }
+	def setNormal(vec: Vector3) { setNormal(vec.i, vec.j, vec.k) }
+	def setIconUV(icon: Icon, pos: Byte) { setIconUV(icon, QuadVert.values(pos)) }
+	def setIconUV(icon: Icon, pos: QuadVert) {
+		pos match {
+			case QuadVert.TopLeft => setUV(icon.getMinU, icon.getMinV)
+			case QuadVert.TopRight => setUV(icon.getMaxU, icon.getMinV)
+			case QuadVert.BotRight => setUV(icon.getMaxU, icon.getMaxV)
+			case QuadVert.BotLeft => setUV(icon.getMinU, icon.getMaxV)
+		}
+	}
 
 	def addUVVert(x: Double, y: Double, z: Double, u: Double, v: Double) { setUV(u, v); addVert(x, y, z) }
-	def addUVVert(v: Vertex, uv: UV) { setUV(uv.u, uv.v); addVert(v.x, v.y, v.z) }
-	def setUV(u: Double, v: Double) { tess.setTextureUV(u, v) }
-	def setUV(uv: UV) { tess.setTextureUV(uv.u, uv.v) }
-	def addVert(x: Double, y: Double, z: Double) { tess.addVertex(x, y, z) }
-	def addVert(v: Vertex) { tess.addVertex(v.x, v.y, v.z) }
-	def setNormal(i: Double, j: Double, k: Double) { tess.setNormal(i.toFloat, j.toFloat, k.toFloat) }
-	def setNormal(vec: Vector) { tess.setNormal(vec.i.toFloat, vec.j.toFloat, vec.k.toFloat) }
+	def addUVVert(v: Coord, uv: Vector2) { setUV(uv.u, uv.v); addVert(v.x, v.y, v.z) }
 
-	def draw() { tess.draw() }
-	def startQuads() { startMode(DrawMode.Quads) }
-	def startMode(mode: DrawMode) { tess.startDrawing(mode.ordinal) }
+	def beginQuads() { beginMode(DrawMode.Quads) }
+	def beginMode(mode: DrawMode) { glBegin(mode.v) }
+
+	def pushMatrix() { glPushMatrix() }
+	def popMatrix() { glPopMatrix() }
+
+	def disable(element: Toggleable) { glDisable(element.v) }
+	def enable(element: Toggleable) { glEnable(element.v) }
+	def isCapEnabled_?(element: Toggleable) = { glIsEnabled(element.v) }
 }
 
-object DrawMode {
+case class TexturedQuad(v1: TexVert, v2: TexVert, v3: TexVert, v4: TexVert)
+case class TexVert(pos: Coord, uv: Vector2)
 
-	sealed class DrawMode(val ordinal: Int)
-
-	case object Points extends DrawMode(0)
-	case object Line extends DrawMode(1)
-	case object LineLoop extends DrawMode(2)
-	case object LineStrip extends DrawMode(3)
-	case object Triangles extends DrawMode(4)
-	case object TriangleStrip extends DrawMode(5)
-	case object TriangleFam extends DrawMode(6)
-	case object Quads extends DrawMode(7)
-	case object QuadStrip extends DrawMode(8)
-	case object Polygon extends DrawMode(9)
-
+trait DrawableShape {
+	def draw()
 }
+
